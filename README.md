@@ -1,2 +1,2 @@
 # etrlCheck
-🎇 Simple plugin to check players!
+🎇 A simple plugin for checking suspicious players!
