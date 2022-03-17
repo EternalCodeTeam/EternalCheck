@@ -3,12 +3,12 @@ package com.eternalcode.check.command.bind;
 import com.eternalcode.check.configuration.implementation.MessagesConfiguration;
 import dev.rollczi.litecommands.LiteInvocation;
 import dev.rollczi.litecommands.argument.ArgumentName;
-import dev.rollczi.litecommands.bind.LiteBind;
+import dev.rollczi.litecommands.bind.Parameter;
 import dev.rollczi.litecommands.valid.ValidationCommandException;
 import org.bukkit.entity.Player;
 
 @ArgumentName("sender")
-public class PlayerBind implements LiteBind {
+public class PlayerBind implements Parameter<Player> {
 
     private final MessagesConfiguration messages;
 

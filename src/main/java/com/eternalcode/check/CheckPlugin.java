@@ -2,7 +2,7 @@ package com.eternalcode.check;
 
 import com.eternalcode.check.command.argument.PlayerArgument;
 import com.eternalcode.check.command.argument.UserArgument;
-import com.eternalcode.check.command.bind.PlayerrBind;
+import com.eternalcode.check.command.bind.PlayerBind;
 import com.eternalcode.check.command.implementation.AdmitCommand;
 import com.eternalcode.check.command.implementation.CheckCommand;
 import com.eternalcode.check.command.message.PermissionMessage;
@@ -70,7 +70,7 @@ public class CheckPlugin extends JavaPlugin {
                 .typeBind(UserManager.class, this.userManager)
                 .typeBind(Server.class, server)
 
-                .parameterBind(Player.class, new PlayerrBind(this.messages))
+                .parameterBind(Player.class, new PlayerBind(this.messages))
 
                 .argument(Player.class, new PlayerArgument(this.messages, server))
                 .argument(User.class, new UserArgument(this.messages, this.userManager, server))
