@@ -32,7 +32,7 @@ import org.bukkit.plugin.java.annotation.plugin.Plugin;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import panda.std.stream.PandaStream;
 
-@Plugin(name = "EternalCheck", version = "1.0.0")
+@Plugin(name = "EternalCheck", version = "1.0.1")
 @Author("Osnixer")
 @ApiVersion(ApiVersion.Target.v1_13)
 @Description("A simple plugin for checking suspicious players")
@@ -82,7 +82,6 @@ public class CheckPlugin extends JavaPlugin {
             .message(ValidationInfo.INVALID_USE, new UsageMessage(this.messages))
 
             .command(AdmitCommand.class, CheckCommand.class)
-
             .register();
 
         if (this.configuration.settings.runnable.enabled) {

@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 @Section(route = "check", aliases = "sprawdz")
-@Permission("etrlCheck.check")
+@Permission("eternalcheck.check")
 public class CheckCommand {
 
     private final ConfigurationManager configurationManager;
@@ -48,8 +48,8 @@ public class CheckCommand {
     }
 
     @Execute(route = "set", aliases = "ustaw")
-    @PermissionExclude("etrlCheck.check")
-    @Permission("etrlCheck.check.set")
+    @PermissionExclude("eternalcheck.check")
+    @Permission("eternalcheck.check.set")
     public void executeSet(Player player) {
         this.config.checkLocation = player.getLocation().clone();
 
