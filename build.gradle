@@ -4,7 +4,7 @@ plugins {
 }
 
 group "com.eternalcode.check"
-version "1.0.0"
+version "1.0.1"
 
 repositories {
     gradlePluginPortal()
@@ -46,14 +46,14 @@ targetCompatibility = JavaVersion.VERSION_1_8
 processResources {
     def props = [version: version]
     inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
+    filteringCharset "UTF-8"
+    filesMatching("plugin.yml") {
         expand props
     }
 }
 
 shadowJar {
-    archiveFileName = "etrlCheck v${project.version}.jar"
+    archiveFileName = "EternalCheck v${project.version}.jar"
 
     exclude "org/intellij/lang/annotations/**"
     exclude "org/jetbrains/annotations/**"
@@ -62,6 +62,6 @@ shadowJar {
     relocate "net.dzikoysk", "com.eternalcode.check.libs.net.dzikoysk"
     relocate "dev.rollczi", "com.eternalcode.check.libs.dev.rollczi"
     relocate "org.panda_lang", "com.eternalcode.check.libs.panda"
-    relocate "net.kyori", "com.eternalcore.check.libs.net.kyori"
+    relocate "net.kyori", "com.eternalcode.check.libs.net.kyori"
     relocate "panda", "com.eternalcode.check.libs.panda"
 }
