@@ -29,10 +29,10 @@ dependencies {
     implementation "dev.rollczi.litecommands:bukkit:1.8.4"
 
     // cdn configs
-    implementation "net.dzikoysk:cdn:1.13.10"
+    implementation "net.dzikoysk:cdn:1.13.16"
 
     // expressible
-    implementation "org.panda-lang:expressible:1.1.16"
+    implementation "org.panda-lang:expressible:1.1.17"
 
     // adventure
     implementation "net.kyori:adventure-platform-bukkit:4.1.0"
