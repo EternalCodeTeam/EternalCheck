@@ -94,7 +94,7 @@ public class CheckPlugin extends JavaPlugin {
         PandaStream.of(
             new PlayerCommandPreprocessListener(this.messages, this.configuration, this.userManager),
             new PlayerQuitListener(this.messages, this.configuration, this.userManager, server),
-            new AsyncPlayerChatListener(this.configuration, this.userManager, server),
+            new AsyncPlayerChatListener(this.configuration, this.userManager),
             new PlayerMoveListener(this.configuration, this.userManager)
         ).forEach(listener -> server.getPluginManager().registerEvents(listener, this));
     }
