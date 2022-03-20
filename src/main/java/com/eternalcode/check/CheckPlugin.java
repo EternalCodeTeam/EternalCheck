@@ -32,9 +32,7 @@ import org.bukkit.plugin.java.annotation.plugin.Plugin;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import panda.std.stream.PandaStream;
 
-import java.util.stream.Stream;
-
-@Plugin(name = "etrlCheck", version = "1.0.0")
+@Plugin(name = "EternalCheck", version = "1.0.0")
 @Author("Osnixer")
 @ApiVersion(ApiVersion.Target.v1_13)
 @Description("A simple plugin for checking suspicious players")
@@ -65,7 +63,7 @@ public class CheckPlugin extends JavaPlugin {
 
         this.bukkitAudiences = BukkitAudiences.create(this);
 
-        this.liteCommands = LiteBukkitFactory.builder(server, "etrlCheck")
+        this.liteCommands = LiteBukkitFactory.builder(server, "EternalCheck")
             .typeBind(ConfigurationManager.class, this.configurationManager)
             .typeBind(PluginConfiguration.class, this.configuration)
             .typeBind(MessagesConfiguration.class, this.messages)

@@ -16,7 +16,7 @@ public class PluginConfiguration extends AbstractConfigWithResource {
     }
 
     @Description({ "# ",
-            "# Plik konfiguracyjny pluginu etrlCheck.",
+            "# Plik konfiguracyjny pluginu EternalCheck.",
             "# ",
             "# Discord: https://dc.eternalcode.pl/",
             "# Website: https://eternalcode.pl/", " " })
