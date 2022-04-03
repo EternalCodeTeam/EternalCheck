@@ -11,6 +11,3 @@
 [![GitHub license](https://img.shields.io/github/license/EternalCodeTeam/EternalCheck?style=for-the-badge)](https://github.com/EternalCodeTeam/EternalCheck/blob/master/LICENSE)    
     
 </div>
-
-#### Features:
-- Mana System
