@@ -23,7 +23,7 @@ dependencies {
     annotationProcessor "org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT"
 
     // spigot api
-    compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot-api:1.19.1-R0.1-SNAPSHOT"
 
     // LiteCommands
     implementation "dev.rollczi.litecommands:bukkit:1.8.4"
