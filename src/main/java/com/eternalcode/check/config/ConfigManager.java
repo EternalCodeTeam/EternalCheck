@@ -1,11 +1,13 @@
 package com.eternalcode.check.config;
 
+import com.eternalcode.check.config.composer.DurationComposer;
 import com.eternalcode.check.config.composer.PositionComposer;
 import com.eternalcode.check.shared.position.Position;
 import net.dzikoysk.cdn.Cdn;
 import net.dzikoysk.cdn.CdnFactory;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +17,7 @@ public class ConfigManager {
             .createYamlLike()
             .getSettings()
             .withComposer(Position.class, new PositionComposer())
+            .withComposer(Duration.class, new DurationComposer())
             .build();
 
     private final Set<ReloadableConfig> configs = new HashSet<>();

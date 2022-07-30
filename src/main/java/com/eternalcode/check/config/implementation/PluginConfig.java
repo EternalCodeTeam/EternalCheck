@@ -8,6 +8,7 @@ import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,9 +52,9 @@ public class PluginConfig implements ReloadableConfig {
         public static class Title {
 
             @Description("# Title values")
-            public int stay = 20;
-            public int fadeIn = 40;
-            public int fadeOut = 20;
+            public Duration stay = Duration.ofMillis(20);
+            public Duration fadeIn = Duration.ofMillis(40);
+            public Duration fadeOut = Duration.ofMillis(20);
 
             @Description({ " ", "# Whether the title at the start of checking should be enabled?" })
             public boolean startTitleMessageEnabled = true;
