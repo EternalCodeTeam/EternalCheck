@@ -3,8 +3,8 @@ package com.eternalcode.check.command.implementation;
 import com.eternalcode.check.NotificationAnnouncer;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
-import com.eternalcode.check.user.User;
-import com.eternalcode.check.user.UserService;
+import com.eternalcode.check.user.CheckedUser;
+import com.eternalcode.check.user.CheckedUserService;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.section.Section;
 import org.bukkit.Server;
@@ -19,21 +19,21 @@ public class AdmitCommand {
 
     private final MessagesConfig messages;
     private final PluginConfig config;
-    private final UserService userService;
+    private final CheckedUserService checkedUserService;
     private final Server server;
     private final NotificationAnnouncer announcer;
 
-    public AdmitCommand(MessagesConfig messages, PluginConfig config, UserService userService, Server server, NotificationAnnouncer announcer) {
+    public AdmitCommand(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer) {
         this.messages = messages;
         this.config = config;
-        this.userService = userService;
+        this.checkedUserService = checkedUserService;
         this.server = server;
         this.announcer = announcer;
     }
 
     @Execute
     public void execute(Player player) {
-        Optional<User> userOptional = this.userService.find(player.getUniqueId());
+        Optional<CheckedUser> userOptional = this.checkedUserService.find(player.getUniqueId());
 
         if (!userOptional.isPresent()) {
             this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.youArentChecked);
@@ -41,9 +41,9 @@ public class AdmitCommand {
             return;
         }
 
-        User user = userOptional.get();
+        CheckedUser user = userOptional.get();
 
-        this.userService.remove(player.getUniqueId());
+        this.checkedUserService.remove(player.getUniqueId());
 
         this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.admit, "{PLAYER}", player.getName()));
 

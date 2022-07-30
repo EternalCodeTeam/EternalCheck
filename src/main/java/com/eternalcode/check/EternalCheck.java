@@ -14,8 +14,8 @@ import com.eternalcode.check.controller.CheckedPlayerCommandController;
 import com.eternalcode.check.controller.CheckedPlayerMoveController;
 import com.eternalcode.check.controller.LogoutPunishmentController;
 import com.eternalcode.check.shared.legacy.LegacyColorProcessor;
-import com.eternalcode.check.user.User;
-import com.eternalcode.check.user.UserService;
+import com.eternalcode.check.user.CheckedUser;
+import com.eternalcode.check.user.CheckedUserService;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
@@ -43,7 +43,7 @@ public final class EternalCheck extends JavaPlugin {
 
     private NotificationAnnouncer notificationAnnouncer;
 
-    private UserService userService;
+    private CheckedUserService checkedUserService;
 
     private LiteCommands<CommandSender> liteCommands;
 
@@ -70,27 +70,27 @@ public final class EternalCheck extends JavaPlugin {
 
         this.notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
 
-        this.userService = new UserService();
+        this.checkedUserService = new CheckedUserService();
 
         this.liteCommands = LiteBukkitFactory.builder(this.getServer(), "EternalCheck")
                 .argument(Player.class, new PlayerArgument(this.messages, server))
-                .argument(User.class, new UserArgument(this.messages, this.userService, server))
+                .argument(CheckedUser.class, new UserArgument(this.messages, this.checkedUserService, server))
 
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual(""))
 
                 .permissionHandler(new PermissionMessage(this.messages, this.notificationAnnouncer))
                 .invalidUsageHandler(new InvalidUseMessage(this.messages, this.notificationAnnouncer))
 
-                .commandInstance(new AdmitCommand(this.messages, this.config, this.userService, server, this.notificationAnnouncer))
-                .commandInstance(new CheckCommand(this.configManager, this.messages, this.config, this.userService, server, this.notificationAnnouncer))
+                .commandInstance(new AdmitCommand(this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer))
+                .commandInstance(new CheckCommand(this.configManager, this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer))
 
                 .register();
 
         Stream.of(
-                new CheckedPlayerChatController(this.config, this.userService),
-                new CheckedPlayerCommandController(this.messages, this.config, this.userService, this.notificationAnnouncer),
-                new CheckedPlayerMoveController(this.config, this.userService),
-                new LogoutPunishmentController(this.messages, this.config, this.userService, server, this.notificationAnnouncer)
+                new CheckedPlayerChatController(this.config, this.checkedUserService),
+                new CheckedPlayerCommandController(this.messages, this.config, this.checkedUserService, this.notificationAnnouncer),
+                new CheckedPlayerMoveController(this.config, this.checkedUserService),
+                new LogoutPunishmentController(this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer)
         ).forEach(listener -> server.getPluginManager().registerEvents(listener, this));
 
         if (!this.config.settings.runnable.enabled) {
@@ -98,7 +98,7 @@ public final class EternalCheck extends JavaPlugin {
         }
 
         server.getScheduler().runTaskTimerAsynchronously(this,
-                new CheckNotificationTask(this.messages, this.config, this.userService, this.notificationAnnouncer),
+                new CheckNotificationTask(this.messages, this.config, this.checkedUserService, this.notificationAnnouncer),
                 0L, 20L * this.config.settings.runnable.interval
         );
 
@@ -137,7 +137,7 @@ public final class EternalCheck extends JavaPlugin {
         return this.notificationAnnouncer;
     }
 
-    public UserService getUserService() {
-        return this.userService;
+    public CheckedUserService getUserService() {
+        return this.checkedUserService;
     }
 }

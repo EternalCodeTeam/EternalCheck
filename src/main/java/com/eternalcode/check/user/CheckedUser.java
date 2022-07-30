@@ -5,14 +5,14 @@ import com.eternalcode.check.shared.position.Position;
 import java.util.Objects;
 import java.util.UUID;
 
-public class User {
+public class CheckedUser {
 
     private final UUID uniqueId;
     private final String name;
     private final String admin;
     private final Position lastPosition;
 
-    User(UUID uniqueId, String name, String admin, Position lastPosition) {
+    CheckedUser(UUID uniqueId, String name, String admin, Position lastPosition) {
         this.uniqueId = uniqueId;
         this.name = name;
         this.admin = admin;
@@ -44,7 +44,7 @@ public class User {
             return false;
         }
 
-        User user = (User) o;
+        CheckedUser user = (CheckedUser) o;
 
         return this.uniqueId.equals(user.uniqueId) && this.admin.equals(user.admin);
     }

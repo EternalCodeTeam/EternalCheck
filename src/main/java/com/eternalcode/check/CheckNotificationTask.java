@@ -1,10 +1,9 @@
 package com.eternalcode.check;
 
-import com.eternalcode.check.NotificationAnnouncer;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
-import com.eternalcode.check.user.User;
-import com.eternalcode.check.user.UserService;
+import com.eternalcode.check.user.CheckedUser;
+import com.eternalcode.check.user.CheckedUserService;
 import panda.utilities.text.Formatter;
 
 import java.time.Duration;
@@ -14,15 +13,15 @@ public final class CheckNotificationTask implements Runnable {
 
     private final MessagesConfig messages;
     private final PluginConfig config;
-    private final UserService userService;
+    private final CheckedUserService checkedUserService;
     private final NotificationAnnouncer announcer;
 
     private final Duration stay, fadeOut, fadeIn;
 
-    public CheckNotificationTask(MessagesConfig messages, PluginConfig config, UserService userService, NotificationAnnouncer announcer) {
+    public CheckNotificationTask(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, NotificationAnnouncer announcer) {
         this.messages = messages;
         this.config = config;
-        this.userService = userService;
+        this.checkedUserService = checkedUserService;
         this.announcer = announcer;
 
         this.stay = this.config.settings.title.stay;
@@ -32,7 +31,7 @@ public final class CheckNotificationTask implements Runnable {
 
     @Override
     public void run() {
-        for (User user : this.userService.getUsers()) {
+        for (CheckedUser user : this.checkedUserService.getUsers()) {
             UUID userUniqueId = user.getUniqueId();
 
             Formatter formatter = new Formatter()

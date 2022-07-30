@@ -1,8 +1,8 @@
 package com.eternalcode.check.command.argument;
 
 import com.eternalcode.check.config.implementation.MessagesConfig;
-import com.eternalcode.check.user.User;
-import com.eternalcode.check.user.UserService;
+import com.eternalcode.check.user.CheckedUser;
+import com.eternalcode.check.user.CheckedUserService;
 import dev.rollczi.litecommands.argument.ArgumentName;
 import dev.rollczi.litecommands.argument.simple.OneArgument;
 import dev.rollczi.litecommands.command.LiteInvocation;
@@ -16,27 +16,27 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ArgumentName("user")
-public class UserArgument implements OneArgument<User> {
+public class UserArgument implements OneArgument<CheckedUser> {
 
     private final MessagesConfig messages;
-    private final UserService userService;
+    private final CheckedUserService checkedUserService;
     private final Server server;
 
-    public UserArgument(MessagesConfig messages, UserService userService, Server server) {
+    public UserArgument(MessagesConfig messages, CheckedUserService checkedUserService, Server server) {
         this.messages = messages;
-        this.userService = userService;
+        this.checkedUserService = checkedUserService;
         this.server = server;
     }
 
     @Override
-    public Result<User, ?> parse(LiteInvocation invocation, String argument) {
+    public Result<CheckedUser, ?> parse(LiteInvocation invocation, String argument) {
         Player player = this.server.getPlayer(argument);
 
         if (player == null) {
             return Result.error(this.messages.argument.offlinePlayer);
         }
 
-        Optional<User> userOptional = this.userService.find(player.getUniqueId());
+        Optional<CheckedUser> userOptional = this.checkedUserService.find(player.getUniqueId());
 
         if (userOptional.isPresent()) {
             return Result.ok(userOptional.get());
@@ -47,9 +47,9 @@ public class UserArgument implements OneArgument<User> {
 
     @Override
     public List<Suggestion> suggest(LiteInvocation invocation) {
-        return this.userService.getUsers()
+        return this.checkedUserService.getUsers()
                 .stream()
-                .map(User::getName)
+                .map(CheckedUser::getName)
                 .map(Suggestion::of)
                 .collect(Collectors.toList());
     }

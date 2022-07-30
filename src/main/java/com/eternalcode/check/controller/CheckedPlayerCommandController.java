@@ -3,7 +3,7 @@ package com.eternalcode.check.controller;
 import com.eternalcode.check.NotificationAnnouncer;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
-import com.eternalcode.check.user.UserService;
+import com.eternalcode.check.user.CheckedUserService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,14 +15,14 @@ public class CheckedPlayerCommandController implements Listener {
 
     private final MessagesConfig messages;
     private final PluginConfig config;
-    private final UserService userService;
+    private final CheckedUserService checkedUserService;
     private final NotificationAnnouncer announcer;
 
 
-    public CheckedPlayerCommandController(MessagesConfig messages, PluginConfig config, UserService userService, NotificationAnnouncer announcer) {
+    public CheckedPlayerCommandController(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, NotificationAnnouncer announcer) {
         this.messages = messages;
         this.config = config;
-        this.userService = userService;
+        this.checkedUserService = checkedUserService;
         this.announcer = announcer;
     }
 
@@ -36,7 +36,7 @@ public class CheckedPlayerCommandController implements Listener {
         UUID uniqueId = player.getUniqueId();
         String command = event.getMessage().split(" ")[0];
 
-        this.userService.find(uniqueId).ifPresent(user -> {
+        this.checkedUserService.find(uniqueId).ifPresent(user -> {
             if (this.config.settings.availableCommands.contains(command)) {
                 return;
             }

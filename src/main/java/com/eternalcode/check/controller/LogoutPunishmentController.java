@@ -3,7 +3,7 @@ package com.eternalcode.check.controller;
 import com.eternalcode.check.NotificationAnnouncer;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
-import com.eternalcode.check.user.UserService;
+import com.eternalcode.check.user.CheckedUserService;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,14 +18,14 @@ public class LogoutPunishmentController implements Listener {
 
     private final MessagesConfig messages;
     private final PluginConfig config;
-    private final UserService userService;
+    private final CheckedUserService checkedUserService;
     private final Server server;
     private final NotificationAnnouncer announcer;
 
-    public LogoutPunishmentController(MessagesConfig messages, PluginConfig config, UserService userService, Server server, NotificationAnnouncer announcer) {
+    public LogoutPunishmentController(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer) {
         this.messages = messages;
         this.config = config;
-        this.userService = userService;
+        this.checkedUserService = checkedUserService;
         this.server = server;
         this.announcer = announcer;
     }
@@ -35,7 +35,7 @@ public class LogoutPunishmentController implements Listener {
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
 
-        this.userService.find(uniqueId).ifPresent(user -> {
+        this.checkedUserService.find(uniqueId).ifPresent(user -> {
 
             Formatter formatter = new Formatter()
                     .register("{PLAYER}", user.getName())
@@ -47,7 +47,7 @@ public class LogoutPunishmentController implements Listener {
 
             this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.logout, "{PLAYER}", player.getName()));
 
-            this.userService.remove(uniqueId);
+            this.checkedUserService.remove(uniqueId);
         });
     }
 }

@@ -1,8 +1,8 @@
 package com.eternalcode.check.controller;
 
 import com.eternalcode.check.config.implementation.PluginConfig;
-import com.eternalcode.check.user.User;
-import com.eternalcode.check.user.UserService;
+import com.eternalcode.check.user.CheckedUser;
+import com.eternalcode.check.user.CheckedUserService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,11 +14,11 @@ import java.util.Optional;
 public class CheckedPlayerChatController implements Listener {
 
     private final PluginConfig config;
-    private final UserService userService;
+    private final CheckedUserService checkedUserService;
 
-    public CheckedPlayerChatController(PluginConfig config, UserService userService) {
+    public CheckedPlayerChatController(PluginConfig config, CheckedUserService checkedUserService) {
         this.config = config;
-        this.userService = userService;
+        this.checkedUserService = checkedUserService;
     }
 
     @EventHandler
@@ -30,13 +30,13 @@ public class CheckedPlayerChatController implements Listener {
         Player player = event.getPlayer();
 
         for (Player recipient : new ArrayList<>(event.getRecipients())) {
-            Optional<User> userOptional = this.userService.find(recipient.getUniqueId());
+            Optional<CheckedUser> userOptional = this.checkedUserService.find(recipient.getUniqueId());
 
             if (!userOptional.isPresent()) {
                 continue;
             }
 
-            User user = userOptional.get();
+            CheckedUser user = userOptional.get();
 
             if (player.getName().equals(user.getAdmin())) {
                 continue;

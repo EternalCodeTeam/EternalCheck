@@ -9,15 +9,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UserService {
+public class CheckedUserService {
 
-    private final Map<UUID, User> userMap = new HashMap<>();
+    private final Map<UUID, CheckedUser> userMap = new HashMap<>();
 
     public void create(UUID uniqueId, String name, String admin, Position lastPosition) {
-        this.userMap.put(uniqueId, new User(uniqueId, name, admin, lastPosition));
+        this.userMap.put(uniqueId, new CheckedUser(uniqueId, name, admin, lastPosition));
     }
 
-    public Optional<User> find(UUID uniqueId) {
+    public Optional<CheckedUser> find(UUID uniqueId) {
         return Optional.ofNullable(this.userMap.get(uniqueId));
     }
 
@@ -25,7 +25,7 @@ public class UserService {
         this.userMap.remove(uniqueId);
     }
 
-    public Collection<User> getUsers() {
+    public Collection<CheckedUser> getUsers() {
         return Collections.unmodifiableCollection(this.userMap.values());
     }
 }

@@ -5,8 +5,8 @@ import com.eternalcode.check.config.ConfigManager;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.shared.position.PositionAdapter;
-import com.eternalcode.check.user.User;
-import com.eternalcode.check.user.UserService;
+import com.eternalcode.check.user.CheckedUser;
+import com.eternalcode.check.user.CheckedUserService;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.argument.By;
 import dev.rollczi.litecommands.argument.Name;
@@ -25,15 +25,15 @@ public class CheckCommand {
     private final ConfigManager configManager;
     private final MessagesConfig messages;
     private final PluginConfig config;
-    private final UserService userService;
+    private final CheckedUserService checkedUserService;
     private final Server server;
     private final NotificationAnnouncer announcer;
 
-    public CheckCommand(ConfigManager configManager, MessagesConfig messages, PluginConfig config, UserService userService, Server server, NotificationAnnouncer announcer) {
+    public CheckCommand(ConfigManager configManager, MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer) {
         this.configManager = configManager;
         this.messages = messages;
         this.config = config;
-        this.userService = userService;
+        this.checkedUserService = checkedUserService;
         this.server = server;
         this.announcer = announcer;
     }
@@ -70,7 +70,7 @@ public class CheckCommand {
             return;
         }
 
-        if (this.userService.find(playerArgument.getUniqueId()).isPresent()) {
+        if (this.checkedUserService.find(playerArgument.getUniqueId()).isPresent()) {
             this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.isChecking);
 
             return;
@@ -82,7 +82,7 @@ public class CheckCommand {
             return;
         }
 
-        this.userService.create(playerArgument.getUniqueId(), playerArgument.getName(), player.getName(), PositionAdapter.convert(playerArgument.getLocation().clone()));
+        this.checkedUserService.create(playerArgument.getUniqueId(), playerArgument.getName(), player.getName(), PositionAdapter.convert(playerArgument.getLocation().clone()));
 
         player.teleport(PositionAdapter.convert(this.config.checkLocation));
         playerArgument.teleport(PositionAdapter.convert(this.config.checkLocation));
@@ -110,11 +110,11 @@ public class CheckCommand {
     }
 
     @Execute(route = "end", aliases = "koniec", min = 1)
-    public void executeEnd(Player player, @Arg @By("user") @Name("player") User user) {
+    public void executeEnd(Player player, @Arg @By("user") @Name("player") CheckedUser user) {
         Player playerArgument = this.server.getPlayer(user.getUniqueId());
 
         playerArgument.teleport(PositionAdapter.convert(user.getLastPosition()));
-        this.userService.remove(user.getUniqueId());
+        this.checkedUserService.remove(user.getUniqueId());
 
         this.announcer.annouceMessage(player.getUniqueId(), this.messages.check.adminEnd.replace("{PLAYER}", playerArgument.getName()));
 
@@ -128,11 +128,11 @@ public class CheckCommand {
     }
 
     @Execute(route = "ban", aliases = "zbanuj", min = 1)
-    public void executeBan(Player player, @Arg @By("user") @Name("player") User user) {
+    public void executeBan(Player player, @Arg @By("user") @Name("player") CheckedUser user) {
         Player playerArgument = this.server.getPlayer(user.getUniqueId());
 
         playerArgument.teleport(PositionAdapter.convert(user.getLastPosition()));
-        this.userService.remove(user.getUniqueId());
+        this.checkedUserService.remove(user.getUniqueId());
 
         this.announcer.annouceMessage(player.getUniqueId(), this.messages.check.adminBan.replace("{PLAYER}", playerArgument.getName()));
 
