@@ -19,7 +19,7 @@ import panda.utilities.StringUtils;
 import panda.utilities.text.Formatter;
 
 @Section(route = "check", aliases = "sprawdz")
-@Permission("EternalCheck.check")
+@Permission("eternalcheck.check")
 public class CheckCommand {
 
     private final ConfigManager configManager;
@@ -44,7 +44,7 @@ public class CheckCommand {
     }
 
     @Execute(route = "set", aliases = "ustaw")
-    @Permission("EternalCheck.check.set")
+    @Permission("eternalcheck.check.set")
     public void executeSet(Player player) {
         this.config.checkLocation = PositionAdapter.convert(player.getLocation().clone());
 
@@ -54,7 +54,7 @@ public class CheckCommand {
     }
 
     @Execute(route = "reload", aliases = "rl")
-    @Permission("EternalCheck.check.reload")
+    @Permission("eternalcheck.check.reload")
     public void executeReload(Player player) {
         this.configManager.reload();
 
@@ -64,7 +64,7 @@ public class CheckCommand {
 
     @Execute(route = "start", aliases = "rozpocznij", min = 1)
     public void executeStart(Player player, @Arg @By("player") @Name("player") Player playerArgument) {
-        if (playerArgument.hasPermission("EternalCheck.bypass")) {
+        if (playerArgument.hasPermission("eternalcheck.bypass")) {
             this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.bypass);
 
             return;

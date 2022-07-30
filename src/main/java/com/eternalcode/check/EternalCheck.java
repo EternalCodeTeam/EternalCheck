@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 
 public final class EternalCheck extends JavaPlugin {
 
-    public static EternalCheck INSTANCE;
+    public static EternalCheck instance;
 
     private ConfigManager configManager;
     private PluginConfig config;
@@ -51,7 +51,7 @@ public final class EternalCheck extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
+        instance = this;
 
         Metrics metrics = new Metrics(this, 15964);
 
@@ -113,7 +113,7 @@ public final class EternalCheck extends JavaPlugin {
     }
 
     public static EternalCheck getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     public ConfigManager getConfigManager() {
