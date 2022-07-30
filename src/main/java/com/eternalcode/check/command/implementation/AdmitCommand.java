@@ -1,40 +1,58 @@
 package com.eternalcode.check.command.implementation;
 
-import com.eternalcode.check.configuration.implementation.MessagesConfiguration;
-import com.eternalcode.check.configuration.implementation.PluginConfiguration;
-import com.eternalcode.check.user.UserManager;
-import com.eternalcode.check.util.ChatUtils;
-import dev.rollczi.litecommands.annotations.Execute;
-import dev.rollczi.litecommands.annotations.Section;
-import org.apache.commons.lang.StringUtils;
+import com.eternalcode.check.NotificationAnnouncer;
+import com.eternalcode.check.config.implementation.MessagesConfig;
+import com.eternalcode.check.config.implementation.PluginConfig;
+import com.eternalcode.check.user.User;
+import com.eternalcode.check.user.UserService;
+import dev.rollczi.litecommands.command.execute.Execute;
+import dev.rollczi.litecommands.command.section.Section;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import panda.utilities.StringUtils;
+import panda.utilities.text.Formatter;
+
+import java.util.Optional;
 
 @Section(route = "admit", aliases = { "przyznajsie", "ff" })
 public class AdmitCommand {
 
-    private final MessagesConfiguration messages;
-    private final PluginConfiguration config;
-    private final UserManager userManager;
+    private final MessagesConfig messages;
+    private final PluginConfig config;
+    private final UserService userService;
     private final Server server;
+    private final NotificationAnnouncer announcer;
 
-    public AdmitCommand(MessagesConfiguration messages, PluginConfiguration config, UserManager userManager, Server server) {
+    public AdmitCommand(MessagesConfig messages, PluginConfig config, UserService userService, Server server, NotificationAnnouncer announcer) {
         this.messages = messages;
         this.config = config;
-        this.userManager = userManager;
+        this.userService = userService;
         this.server = server;
+        this.announcer = announcer;
     }
 
     @Execute
     public void execute(Player player) {
-        if (this.userManager.find(player.getUniqueId()).isEmpty()) {
-            player.sendMessage(ChatUtils.colour(this.messages.check.arguments.youArentChecked));
+        Optional<User> userOptional = this.userService.find(player.getUniqueId());
+
+        if (!userOptional.isPresent()) {
+            this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.youArentChecked);
+
             return;
         }
-        this.userManager.remove(player.getUniqueId());
+
+        User user = userOptional.get();
+
+        this.userService.remove(player.getUniqueId());
 
         this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.admit, "{PLAYER}", player.getName()));
 
-        this.messages.check.broadcast.admit.forEach(message -> this.server.broadcastMessage(ChatUtils.colour(StringUtils.replace(message, "{PLAYER}", player.getName()))));
+        Formatter formatter = new Formatter()
+                .register("{PLAYER}", user.getName())
+                .register("{ADMIN}", user.getAdmin());
+
+        for (Player all : this.server.getOnlinePlayers()) {
+            this.messages.check.broadcast.admit.forEach(message -> this.announcer.annouceMessage(all.getUniqueId(), formatter.format(message)));
+        }
     }
 }

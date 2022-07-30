@@ -1,22 +1,56 @@
 package com.eternalcode.check.user;
 
-import lombok.Getter;
-import org.bukkit.Location;
+import com.eternalcode.check.shared.position.Position;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class User {
 
-    @Getter private final UUID uniqueId;
-    @Getter private final String name;
-    @Getter private final String admin;
-    @Getter private final Location lastLocation;
+    private final UUID uniqueId;
+    private final String name;
+    private final String admin;
+    private final Position lastPosition;
 
-    public User(UUID uniqueId, String name, String admin, Location lastLocation) {
+    User(UUID uniqueId, String name, String admin, Position lastPosition) {
         this.uniqueId = uniqueId;
         this.name = name;
         this.admin = admin;
-        this.lastLocation = lastLocation;
+        this.lastPosition = lastPosition;
     }
 
+    public UUID getUniqueId() {
+        return this.uniqueId;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getAdmin() {
+        return this.admin;
+    }
+
+    public Position getLastPosition() {
+        return this.lastPosition;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        User user = (User) o;
+
+        return this.uniqueId.equals(user.uniqueId) && this.admin.equals(user.admin);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.uniqueId, this.admin);
+    }
 }

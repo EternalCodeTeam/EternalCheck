@@ -1,56 +1,56 @@
 package com.eternalcode.check.command.argument;
 
-import com.eternalcode.check.configuration.implementation.MessagesConfiguration;
+import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.user.User;
-import com.eternalcode.check.user.UserManager;
-import dev.rollczi.litecommands.LiteInvocation;
+import com.eternalcode.check.user.UserService;
 import dev.rollczi.litecommands.argument.ArgumentName;
-import dev.rollczi.litecommands.argument.SingleArgumentHandler;
-import dev.rollczi.litecommands.valid.ValidationCommandException;
+import dev.rollczi.litecommands.argument.simple.OneArgument;
+import dev.rollczi.litecommands.command.LiteInvocation;
+import dev.rollczi.litecommands.suggestion.Suggestion;
 import org.bukkit.Server;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import panda.std.Option;
+import panda.std.Result;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ArgumentName("user")
-public class UserArgument implements SingleArgumentHandler<User> {
+public class UserArgument implements OneArgument<User> {
 
-    private final MessagesConfiguration messages;
-    private final UserManager userManager;
+    private final MessagesConfig messages;
+    private final UserService userService;
     private final Server server;
 
-    public UserArgument(MessagesConfiguration messages, UserManager userManager, Server server) {
+    public UserArgument(MessagesConfig messages, UserService userService, Server server) {
         this.messages = messages;
-        this.userManager = userManager;
+        this.userService = userService;
         this.server = server;
     }
 
     @Override
-    public User parse(LiteInvocation invocation, String argument) throws ValidationCommandException {
+    public Result<User, ?> parse(LiteInvocation invocation, String argument) {
         Player player = this.server.getPlayer(argument);
 
         if (player == null) {
-            throw new ValidationCommandException(this.messages.arguments.offlinePlayer);
+            return Result.error(this.messages.argument.offlinePlayer);
         }
 
-        Option<User> userOption = this.userManager.find(player.getUniqueId());
+        Optional<User> userOptional = this.userService.find(player.getUniqueId());
 
-        if (userOption.isEmpty()) {
-            throw new ValidationCommandException(this.messages.check.arguments.notChecked);
+        if (userOptional.isPresent()) {
+            return Result.ok(userOptional.get());
         }
 
-        return userOption.get();
+        return Result.error(this.messages.argument.notChecking);
     }
 
     @Override
-    public List<String> tabulation(String command, String[] args) {
-        return this.userManager.getUsers()
+    public List<Suggestion> suggest(LiteInvocation invocation) {
+        return this.userService.getUsers()
                 .stream()
-                .map(user -> this.server.getPlayer(user.getUniqueId()))
-                .map(HumanEntity::getName)
+                .map(User::getName)
+                .map(Suggestion::of)
                 .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,7 @@
 package com.eternalcode.check.listener;
 
-import com.eternalcode.check.configuration.implementation.PluginConfiguration;
-import com.eternalcode.check.user.UserManager;
+import com.eternalcode.check.config.implementation.PluginConfig;
+import com.eternalcode.check.user.UserService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,22 +11,24 @@ import java.util.UUID;
 
 public class PlayerMoveListener implements Listener {
 
-    private final PluginConfiguration config;
-    private final UserManager userManager;
+    private final PluginConfig config;
+    private final UserService userService;
 
-    public PlayerMoveListener(PluginConfiguration config, UserManager userManager) {
+    public PlayerMoveListener(PluginConfig config, UserService userService) {
         this.config = config;
-        this.userManager = userManager;
+        this.userService = userService;
     }
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
+        if (this.config.settings.canMove) {
+            return;
+        }
+
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
 
-        if (this.config.settings.cantMove) {
-            this.userManager.find(uniqueId).peek(user -> event.setCancelled(true));
-        }
+        this.userService.find(uniqueId).ifPresent(user -> event.setCancelled(true));
     }
 
 }
