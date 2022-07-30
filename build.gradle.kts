@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    // paper lib, spigot api
+    // Spigot api
     compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
 
     // Kyori Adventure
@@ -31,7 +31,7 @@ dependencies {
     // LiteCommands
     implementation("dev.rollczi.litecommands:bukkit:2.3.3")
 
-    // cdn configs
+    // Cdn
     implementation("net.dzikoysk:cdn:1.13.23")
 
     // bStats
@@ -60,20 +60,27 @@ java {
 tasks.withType<ShadowJar> {
     archiveFileName.set("EternalCheck v${project.version}.jar")
 
-    exclude("org/intellij/lang/annotations/**")
-    exclude("org/jetbrains/annotations/**")
-    exclude("org/checkerframework/**")
-    exclude("META-INF/**")
-    exclude("javax/**")
+    exclude(
+        "org/intellij/lang/annotations/**",
+        "org/jetbrains/annotations/**",
+        "org/checkerframework/**",
+        "META-INF/**",
+        "javax/**"
+    )
 
     mergeServiceFiles()
     minimize()
 
-    relocate("panda", "com.eternalcode.check.libs.org.panda")
-    relocate("org.panda_lang", "com.eternalcode.check.libs.org.panda")
-    relocate("net.dzikoysk", "com.eternalcode.check.libs.net.dzikoysk")
-    relocate("dev.rollczi", "com.eternalcode.check.libs.dev.rollczi")
-    relocate("org.bstats", "com.eternalcode.check.libs.org.bstats")
-    relocate("net.kyori", "com.eternalcode.check.libs.net.kyori")
+    val prefix = "com.eternalcode.check.libs"
+
+    listOf(
+        "panda",
+        "org.panda_lang",
+        "org.bstats",
+        "net.dzikoysk",
+        "dev.rollczi"
+    ).forEach { pack ->
+        relocate(pack, "$prefix.$pack")
+    }
 
 }
