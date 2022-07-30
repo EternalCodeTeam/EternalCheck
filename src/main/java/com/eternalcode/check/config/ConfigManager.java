@@ -1,5 +1,7 @@
 package com.eternalcode.check.config;
 
+import com.eternalcode.check.config.composer.PositionComposer;
+import com.eternalcode.check.shared.position.Position;
 import net.dzikoysk.cdn.Cdn;
 import net.dzikoysk.cdn.CdnFactory;
 
@@ -12,6 +14,7 @@ public class ConfigManager {
     private final static Cdn CDN = CdnFactory
             .createYamlLike()
             .getSettings()
+            .withComposer(Position.class, new PositionComposer())
             .build();
 
     private final Set<ReloadableConfig> configs = new HashSet<>();
