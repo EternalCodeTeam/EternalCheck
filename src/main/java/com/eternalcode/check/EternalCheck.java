@@ -53,7 +53,7 @@ public final class EternalCheck extends JavaPlugin {
     public void onEnable() {
         INSTANCE = this;
 
-        Metrics metrics = new Metrics(this, 15960);
+        Metrics metrics = new Metrics(this, 15964);
 
         Server server = this.getServer();
 
