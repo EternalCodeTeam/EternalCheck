@@ -1,4 +1,4 @@
-package com.eternalcode.check.listener;
+package com.eternalcode.check.controller;
 
 import com.eternalcode.check.NotificationAnnouncer;
 import com.eternalcode.check.config.implementation.MessagesConfig;
@@ -14,7 +14,7 @@ import panda.utilities.text.Formatter;
 
 import java.util.UUID;
 
-public class PlayerQuitListener implements Listener {
+public class LogoutPunishmentController implements Listener {
 
     private final MessagesConfig messages;
     private final PluginConfig config;
@@ -22,7 +22,7 @@ public class PlayerQuitListener implements Listener {
     private final Server server;
     private final NotificationAnnouncer announcer;
 
-    public PlayerQuitListener(MessagesConfig messages, PluginConfig config, UserService userService, Server server, NotificationAnnouncer announcer) {
+    public LogoutPunishmentController(MessagesConfig messages, PluginConfig config, UserService userService, Server server, NotificationAnnouncer announcer) {
         this.messages = messages;
         this.config = config;
         this.userService = userService;

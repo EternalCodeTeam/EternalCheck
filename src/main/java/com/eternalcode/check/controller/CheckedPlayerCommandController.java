@@ -1,4 +1,4 @@
-package com.eternalcode.check.listener;
+package com.eternalcode.check.controller;
 
 import com.eternalcode.check.NotificationAnnouncer;
 import com.eternalcode.check.config.implementation.MessagesConfig;
@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.UUID;
 
-public class PlayerCommandPreprocessListener implements Listener {
+public class CheckedPlayerCommandController implements Listener {
 
     private final MessagesConfig messages;
     private final PluginConfig config;
@@ -19,7 +19,7 @@ public class PlayerCommandPreprocessListener implements Listener {
     private final NotificationAnnouncer announcer;
 
 
-    public PlayerCommandPreprocessListener(MessagesConfig messages, PluginConfig config, UserService userService, NotificationAnnouncer announcer) {
+    public CheckedPlayerCommandController(MessagesConfig messages, PluginConfig config, UserService userService, NotificationAnnouncer announcer) {
         this.messages = messages;
         this.config = config;
         this.userService = userService;

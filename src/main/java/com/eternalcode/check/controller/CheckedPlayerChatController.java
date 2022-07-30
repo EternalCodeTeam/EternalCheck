@@ -1,4 +1,4 @@
-package com.eternalcode.check.listener;
+package com.eternalcode.check.controller;
 
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.user.User;
@@ -7,17 +7,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import panda.utilities.iterable.ArrayIterable;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class AsyncPlayerChatListener implements Listener {
+public class CheckedPlayerChatController implements Listener {
 
     private final PluginConfig config;
     private final UserService userService;
 
-    public AsyncPlayerChatListener(PluginConfig config, UserService userService) {
+    public CheckedPlayerChatController(PluginConfig config, UserService userService) {
         this.config = config;
         this.userService = userService;
     }

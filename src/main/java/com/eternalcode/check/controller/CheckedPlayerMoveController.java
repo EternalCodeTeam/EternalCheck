@@ -1,4 +1,4 @@
-package com.eternalcode.check.listener;
+package com.eternalcode.check.controller;
 
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.user.UserService;
@@ -9,12 +9,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.UUID;
 
-public class PlayerMoveListener implements Listener {
+public class CheckedPlayerMoveController implements Listener {
 
     private final PluginConfig config;
     private final UserService userService;
 
-    public PlayerMoveListener(PluginConfig config, UserService userService) {
+    public CheckedPlayerMoveController(PluginConfig config, UserService userService) {
         this.config = config;
         this.userService = userService;
     }
