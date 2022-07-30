@@ -78,6 +78,7 @@ tasks.withType<ShadowJar> {
         "org.panda_lang",
         "org.bstats",
         "net.dzikoysk",
+        "net.kyori",
         "dev.rollczi"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
