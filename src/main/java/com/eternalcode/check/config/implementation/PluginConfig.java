@@ -24,10 +24,10 @@ public class PluginConfig implements ReloadableConfig {
             "# Discord: https://dc.eternalcode.pl/",
             "# Website: https://eternalcode.pl/", " " })
 
-    @Description("# Ustawienia sprawdzania")
+    @Description("# Settings")
     public Settings settings = new Settings();
 
-    @Description({ "", "# Wykonywane komendy" })
+    @Description({ "", "# Commands" })
     public Commands commands = new Commands();
 
     @Contextual
