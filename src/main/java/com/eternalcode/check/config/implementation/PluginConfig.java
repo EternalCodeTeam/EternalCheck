@@ -52,9 +52,9 @@ public class PluginConfig implements ReloadableConfig {
         public static class Title {
 
             @Description("# Title values")
-            public Duration stay = Duration.ofMillis(20);
-            public Duration fadeIn = Duration.ofMillis(40);
-            public Duration fadeOut = Duration.ofMillis(20);
+            public Duration stay = Duration.ofSeconds(1);
+            public Duration fadeIn = Duration.ofSeconds(2);
+            public Duration fadeOut = Duration.ofSeconds(1);
 
             @Description({ " ", "# Whether the title at the start of checking should be enabled?" })
             public boolean startTitleMessageEnabled = true;

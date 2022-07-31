@@ -129,10 +129,10 @@ public class MessagesConfig implements ReloadableConfig {
             public List<String> startCheck = Collections.singletonList("&cPlayer &e{PLAYER} &cis checking by &e{ADMIN}&c!");
 
             @Description(" ")
-            public List<String> endCheck = Collections.singletonList("&cPlayer &e{PLAYER} &cwas checked and banned by &e{ADMIN}&c!");
+            public List<String> endCheck = Collections.singletonList("&cPlayer &e{PLAYER} &cwas checked by &e{ADMIN}&c!");
 
             @Description(" ")
-            public List<String> banCheck = Collections.singletonList("&cPlayer &e{PLAYER} &cwas checked by &e{ADMIN}&c!");
+            public List<String> banCheck = Collections.singletonList("&cPlayer &e{PLAYER} &cwas checked and banned by &e{ADMIN}&c!");
 
             @Description(" ")
             public List<String> logoutCheck = Collections.singletonList("&cPlayer &e{PLAYER} &clogged out while checking!");
