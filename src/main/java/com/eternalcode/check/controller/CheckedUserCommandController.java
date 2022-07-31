@@ -1,12 +1,30 @@
 package com.eternalcode.check.controller;
 
+import com.eternalcode.check.NotificationAnnouncer;
+import com.eternalcode.check.config.implementation.MessagesConfig;
+import com.eternalcode.check.config.implementation.PluginConfig;
+import com.eternalcode.check.user.CheckedUserService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.UUID;
 
-public class CheckedUserCommandController extends AbstractController {
+public class CheckedUserCommandController implements Listener {
+
+    private final MessagesConfig messages;
+    private final PluginConfig config;
+    private final CheckedUserService checkedUserService;
+    private final NotificationAnnouncer announcer;
+
+
+    public CheckedUserCommandController(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, NotificationAnnouncer announcer) {
+        this.messages = messages;
+        this.config = config;
+        this.checkedUserService = checkedUserService;
+        this.announcer = announcer;
+    }
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
@@ -24,7 +42,7 @@ public class CheckedUserCommandController extends AbstractController {
             }
 
             event.setCancelled(true);
-            this.notificationAnnouncer.annouceMessage(uniqueId, this.messages.argument.cantUseCommand);
+            this.announcer.annouceMessage(uniqueId, this.messages.argument.cantUseCommand);
 
         });
     }

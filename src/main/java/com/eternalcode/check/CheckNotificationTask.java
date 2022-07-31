@@ -4,21 +4,30 @@ import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.user.CheckedUser;
 import com.eternalcode.check.user.CheckedUserService;
-import org.panda_lang.utilities.inject.annotations.Inject;
 import panda.utilities.text.Formatter;
 
+import java.time.Duration;
 import java.util.UUID;
 
 public final class CheckNotificationTask implements Runnable {
 
-    @Inject
-    private MessagesConfig messages;
-    @Inject
-    private PluginConfig config;
-    @Inject
-    private CheckedUserService checkedUserService;
-    @Inject
-    private NotificationAnnouncer announcer;
+    private final MessagesConfig messages;
+    private final PluginConfig config;
+    private final CheckedUserService checkedUserService;
+    private final NotificationAnnouncer announcer;
+
+    private final Duration stay, fadeOut, fadeIn;
+
+    public CheckNotificationTask(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, NotificationAnnouncer announcer) {
+        this.messages = messages;
+        this.config = config;
+        this.checkedUserService = checkedUserService;
+        this.announcer = announcer;
+
+        this.stay = this.config.settings.title.stay;
+        this.fadeOut = this.config.settings.title.fadeOut;
+        this.fadeIn = this.config.settings.title.fadeIn;
+    }
 
     @Override
     public void run() {
@@ -30,7 +39,7 @@ public final class CheckNotificationTask implements Runnable {
                     .register("{ADMIN}", user.getChecker());
 
             if (this.config.settings.title.taskTitleMessageEnabled) {
-                this.announcer.annouceTitle(userUniqueId, this.messages.check.task.title, this.messages.check.task.subTitle, this.config.settings.title.stay, this.config.settings.title.fadeOut, this.config.settings.title.fadeIn);
+                this.announcer.annouceTitle(userUniqueId, this.messages.check.task.title, this.messages.check.task.subTitle, this.stay, this.fadeOut, this.fadeIn);
             }
 
             if (this.config.settings.taskActionBarEnabled) {
