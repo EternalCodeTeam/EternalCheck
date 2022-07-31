@@ -7,6 +7,7 @@ import com.eternalcode.check.command.implementation.CheckCommand;
 import com.eternalcode.check.command.message.InvalidUseMessage;
 import com.eternalcode.check.command.message.PermissionMessage;
 import com.eternalcode.check.config.ConfigManager;
+import com.eternalcode.check.config.implementation.DataConfig;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.controller.CheckedUserChatController;
@@ -23,6 +24,7 @@ import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,6 +39,7 @@ public final class EternalCheck extends JavaPlugin {
     private ConfigManager configManager;
     private PluginConfig config;
     private MessagesConfig messages;
+    private DataConfig data;
 
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
@@ -51,17 +54,20 @@ public final class EternalCheck extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        Metrics metrics = new Metrics(this, 15964);
-
         Server server = this.getServer();
 
         this.configManager = new ConfigManager(this.getDataFolder());
 
         this.config = new PluginConfig();
         this.messages = new MessagesConfig();
+        this.data = new DataConfig();
 
         this.configManager.load(this.config);
         this.configManager.load(this.messages);
+        this.configManager.load(this.data);
+
+        Metrics metrics = new Metrics(this, 15964);
+        metrics.addCustomChart(new SingleLineChart("checked_users", () -> this.data.getCheckedUsers()));
 
         this.audienceProvider = BukkitAudiences.create(this);
         this.miniMessage = MiniMessage.builder()
@@ -82,7 +88,7 @@ public final class EternalCheck extends JavaPlugin {
                 .invalidUsageHandler(new InvalidUseMessage(this.messages, this.notificationAnnouncer))
 
                 .commandInstance(new AdmitCommand(this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer))
-                .commandInstance(new CheckCommand(this.configManager, this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer))
+                .commandInstance(new CheckCommand(this.configManager, this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer, data))
 
                 .register();
 
@@ -122,6 +128,10 @@ public final class EternalCheck extends JavaPlugin {
 
     public MessagesConfig getMessagesConfig() {
         return this.messages;
+    }
+
+    public DataConfig getDataConfig() {
+        return this.data;
     }
 
     public AudienceProvider getAudienceProvider() {

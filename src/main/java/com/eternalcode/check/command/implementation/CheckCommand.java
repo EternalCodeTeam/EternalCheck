@@ -2,13 +2,13 @@ package com.eternalcode.check.command.implementation;
 
 import com.eternalcode.check.NotificationAnnouncer;
 import com.eternalcode.check.config.ConfigManager;
+import com.eternalcode.check.config.implementation.DataConfig;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.shared.position.PositionAdapter;
 import com.eternalcode.check.user.CheckedUser;
 import com.eternalcode.check.user.CheckedUserService;
 import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.argument.By;
 import dev.rollczi.litecommands.argument.Name;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
@@ -28,14 +28,16 @@ public class CheckCommand {
     private final CheckedUserService checkedUserService;
     private final Server server;
     private final NotificationAnnouncer announcer;
+    private final DataConfig data;
 
-    public CheckCommand(ConfigManager configManager, MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer) {
+    public CheckCommand(ConfigManager configManager, MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer, DataConfig data) {
         this.configManager = configManager;
         this.messages = messages;
         this.config = config;
         this.checkedUserService = checkedUserService;
         this.server = server;
         this.announcer = announcer;
+        this.data = data;
     }
 
     @Execute
@@ -63,12 +65,12 @@ public class CheckCommand {
 
 
     @Execute(route = "start", aliases = "rozpocznij", min = 1)
-    public void executeStart(Player player, @Arg @By("player") @Name("player") Player playerArgument) {
-        if (playerArgument.hasPermission("eternalcheck.bypass")) {
-            this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.bypass);
-
-            return;
-        }
+    public void executeStart(Player player, @Arg @Name("player") Player playerArgument) {
+//        if (playerArgument.hasPermission("eternalcheck.bypass")) {
+//            this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.bypass);
+//
+//            return;
+//        }
 
         if (this.checkedUserService.find(playerArgument.getUniqueId()).isPresent()) {
             this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.isChecking);
@@ -83,6 +85,9 @@ public class CheckCommand {
         }
 
         this.checkedUserService.markChecked(playerArgument.getUniqueId(), playerArgument.getName(), player.getName(), PositionAdapter.convert(playerArgument.getLocation().clone()));
+
+        this.data.addCheckedUser();
+        this.configManager.save(this.data);
 
         player.teleport(PositionAdapter.convert(this.config.checkLocation));
         playerArgument.teleport(PositionAdapter.convert(this.config.checkLocation));
@@ -110,7 +115,7 @@ public class CheckCommand {
     }
 
     @Execute(route = "end", aliases = "koniec", min = 1)
-    public void executeEnd(Player player, @Arg @By("user") @Name("player") CheckedUser user) {
+    public void executeEnd(Player player, @Arg @Name("player") CheckedUser user) {
         Player playerArgument = this.server.getPlayer(user.getUniqueId());
 
         playerArgument.teleport(PositionAdapter.convert(user.getLastPosition()));
@@ -128,7 +133,7 @@ public class CheckCommand {
     }
 
     @Execute(route = "ban", aliases = "zbanuj", min = 1)
-    public void executeBan(Player player, @Arg @By("user") @Name("player") CheckedUser user) {
+    public void executeBan(Player player, @Arg @Name("player") CheckedUser user) {
         Player playerArgument = this.server.getPlayer(user.getUniqueId());
 
         playerArgument.teleport(PositionAdapter.convert(user.getLastPosition()));
