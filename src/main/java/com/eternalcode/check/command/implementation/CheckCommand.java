@@ -82,7 +82,7 @@ public class CheckCommand {
             return;
         }
 
-        this.checkedUserService.create(playerArgument.getUniqueId(), playerArgument.getName(), player.getName(), PositionAdapter.convert(playerArgument.getLocation().clone()));
+        this.checkedUserService.markChecked(playerArgument.getUniqueId(), playerArgument.getName(), player.getName(), PositionAdapter.convert(playerArgument.getLocation().clone()));
 
         player.teleport(PositionAdapter.convert(this.config.checkLocation));
         playerArgument.teleport(PositionAdapter.convert(this.config.checkLocation));
@@ -114,7 +114,7 @@ public class CheckCommand {
         Player playerArgument = this.server.getPlayer(user.getUniqueId());
 
         playerArgument.teleport(PositionAdapter.convert(user.getLastPosition()));
-        this.checkedUserService.remove(user.getUniqueId());
+        this.checkedUserService.unmarkChecked(user.getUniqueId());
 
         this.announcer.annouceMessage(player.getUniqueId(), this.messages.check.adminEnd.replace("{PLAYER}", playerArgument.getName()));
 
@@ -132,7 +132,7 @@ public class CheckCommand {
         Player playerArgument = this.server.getPlayer(user.getUniqueId());
 
         playerArgument.teleport(PositionAdapter.convert(user.getLastPosition()));
-        this.checkedUserService.remove(user.getUniqueId());
+        this.checkedUserService.unmarkChecked(user.getUniqueId());
 
         this.announcer.annouceMessage(player.getUniqueId(), this.messages.check.adminBan.replace("{PLAYER}", playerArgument.getName()));
 

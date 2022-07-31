@@ -27,7 +27,7 @@ public class CheckedUserLogoutPunishmentController extends AbstractController {
 
             this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.logout, "{PLAYER}", player.getName()));
 
-            this.checkedUserService.remove(uniqueId);
+            this.checkedUserService.unmarkChecked(uniqueId);
         });
     }
 }

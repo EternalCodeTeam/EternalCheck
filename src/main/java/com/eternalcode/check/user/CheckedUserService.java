@@ -13,7 +13,7 @@ public class CheckedUserService {
 
     private final Map<UUID, CheckedUser> checkedUsers = new HashMap<>();
 
-    public void create(UUID uniqueId, String name, String admin, Position lastPosition) {
+    public void markChecked(UUID uniqueId, String name, String admin, Position lastPosition) {
         this.checkedUsers.put(uniqueId, new CheckedUser(uniqueId, name, admin, lastPosition));
     }
 
@@ -21,7 +21,7 @@ public class CheckedUserService {
         return Optional.ofNullable(this.checkedUsers.get(uniqueId));
     }
 
-    public void remove(UUID uniqueId) {
+    public void unmarkChecked(UUID uniqueId) {
         this.checkedUsers.remove(uniqueId);
     }
 

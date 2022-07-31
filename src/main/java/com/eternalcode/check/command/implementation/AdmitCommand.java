@@ -43,7 +43,7 @@ public class AdmitCommand {
 
         CheckedUser user = userOptional.get();
 
-        this.checkedUserService.remove(player.getUniqueId());
+        this.checkedUserService.unmarkChecked(player.getUniqueId());
 
         this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.admit, "{PLAYER}", player.getName()));
 
