@@ -37,6 +37,9 @@ public class MessagesConfig implements ReloadableConfig {
         public String correctUsage = "&eCorrect usage: &7{USAGE}";
 
         @Description(" ")
+        public String correctUsageList = "&7{USAGE}";
+
+        @Description(" ")
         public String offlinePlayer = "&cThat player is offline!";
 
         @Description(" ")
@@ -55,15 +58,7 @@ public class MessagesConfig implements ReloadableConfig {
         public String cantUseCommand = "&cYou are being checked! You can use only: &e/helpop, &e/admit";
 
         @Description(" ")
-        public String bypass = "&cYou don't have permission to check this player!";
-
-        @Description(" ")
-        public List<String> help = Arrays.asList(
-                "&8• &7/check start <player> - start of check",
-                "&8• &7/check end <player> - end of check",
-                "&8• &7/check ban <player> - ban player for cheats",
-                "&8• &7/check set - sets check location"
-        );
+        public String bypass = "&cThis player have bypass permission!";
     }
 
     @Contextual

@@ -40,11 +40,6 @@ public class CheckCommand {
         this.data = data;
     }
 
-    @Execute
-    public void execute(Player player) {
-        this.messages.argument.help.forEach(message -> this.announcer.annouceMessage(player.getUniqueId(), message));
-    }
-
     @Execute(route = "set", aliases = "ustaw")
     @Permission("eternalcheck.check.set")
     public void executeSet(Player player) {
@@ -66,11 +61,11 @@ public class CheckCommand {
 
     @Execute(route = "start", aliases = "rozpocznij", min = 1)
     public void executeStart(Player player, @Arg @Name("player") Player playerArgument) {
-//        if (playerArgument.hasPermission("eternalcheck.bypass")) {
-//            this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.bypass);
-//
-//            return;
-//        }
+        if (playerArgument.hasPermission("eternalcheck.bypass")) {
+            this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.bypass);
+
+            return;
+        }
 
         if (this.checkedUserService.find(playerArgument.getUniqueId()).isPresent()) {
             this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.isChecking);
