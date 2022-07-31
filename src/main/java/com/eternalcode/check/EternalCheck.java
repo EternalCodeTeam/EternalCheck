@@ -1,7 +1,7 @@
 package com.eternalcode.check;
 
 import com.eternalcode.check.command.argument.PlayerArgument;
-import com.eternalcode.check.command.argument.UserArgument;
+import com.eternalcode.check.command.argument.CheckedUserArgument;
 import com.eternalcode.check.command.implementation.AdmitCommand;
 import com.eternalcode.check.command.implementation.CheckCommand;
 import com.eternalcode.check.command.message.InvalidUseMessage;
@@ -12,7 +12,7 @@ import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.controller.CheckedUserChatController;
 import com.eternalcode.check.controller.CheckedUserCommandController;
 import com.eternalcode.check.controller.CheckedUserMoveController;
-import com.eternalcode.check.controller.LogoutPunishmentController;
+import com.eternalcode.check.controller.CheckedUserLogoutPunishmentController;
 import com.eternalcode.check.shared.legacy.LegacyColorProcessor;
 import com.eternalcode.check.user.CheckedUser;
 import com.eternalcode.check.user.CheckedUserService;
@@ -27,6 +27,8 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.panda_lang.utilities.inject.DependencyInjection;
+import org.panda_lang.utilities.inject.Injector;
 
 import java.util.stream.Stream;
 
@@ -46,6 +48,8 @@ public final class EternalCheck extends JavaPlugin {
     private CheckedUserService checkedUserService;
 
     private LiteCommands<CommandSender> liteCommands;
+
+    private Injector injector;
 
     @Override
     public void onEnable() {
@@ -68,13 +72,23 @@ public final class EternalCheck extends JavaPlugin {
                 .postProcessor(new LegacyColorProcessor())
                 .build();
 
-        this.notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
+        this.injector = DependencyInjection.createInjector(resources -> {
+            resources.on(AudienceProvider.class).assignInstance(this.audienceProvider);
+            resources.on(MiniMessage.class).assignInstance(this.miniMessage);
+            resources.on(PluginConfig.class).assignInstance(this.config);
+            resources.on(MessagesConfig.class).assignInstance(this.messages);
+            resources.on(CheckedUserService.class).assignInstance(this.checkedUserService);
+            resources.on(NotificationAnnouncer.class).assignInstance(this.notificationAnnouncer);
+            resources.on(Server.class).assignInstance(server);
+        });
+
+        this.notificationAnnouncer = new NotificationAnnouncer();
 
         this.checkedUserService = new CheckedUserService();
 
         this.liteCommands = LiteBukkitFactory.builder(this.getServer(), "EternalCheck")
                 .argument(Player.class, new PlayerArgument(this.messages, server))
-                .argument(CheckedUser.class, new UserArgument(this.messages, this.checkedUserService, server))
+                .argument(CheckedUser.class, new CheckedUserArgument(this.messages, this.checkedUserService, server))
 
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual(""))
 
@@ -87,20 +101,17 @@ public final class EternalCheck extends JavaPlugin {
                 .register();
 
         Stream.of(
-                new CheckedUserChatController(this.config, this.checkedUserService),
-                new CheckedUserCommandController(this.messages, this.config, this.checkedUserService, this.notificationAnnouncer),
-                new CheckedUserMoveController(this.config, this.checkedUserService),
-                new LogoutPunishmentController(this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer)
+                new CheckedUserChatController(),
+                new CheckedUserCommandController(),
+                new CheckedUserMoveController(),
+                new CheckedUserLogoutPunishmentController()
         ).forEach(listener -> server.getPluginManager().registerEvents(listener, this));
 
         if (!this.config.settings.runnable.enabled) {
             return;
         }
 
-        server.getScheduler().runTaskTimerAsynchronously(this,
-                new CheckNotificationTask(this.messages, this.config, this.checkedUserService, this.notificationAnnouncer),
-                0L, 20L * this.config.settings.runnable.interval
-        );
+        server.getScheduler().runTaskTimerAsynchronously(this, new CheckNotificationTask(), 0L, 20L * this.config.settings.runnable.interval);
 
     }
 
@@ -139,5 +150,13 @@ public final class EternalCheck extends JavaPlugin {
 
     public CheckedUserService getUserService() {
         return this.checkedUserService;
+    }
+
+    public LiteCommands<CommandSender> getLiteCommands() {
+        return this.liteCommands;
+    }
+
+    public Injector getInjector() {
+        return this.injector;
     }
 }

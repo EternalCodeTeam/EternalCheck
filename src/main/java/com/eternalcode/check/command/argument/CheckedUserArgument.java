@@ -16,13 +16,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ArgumentName("user")
-public class UserArgument implements OneArgument<CheckedUser> {
+public class CheckedUserArgument implements OneArgument<CheckedUser> {
 
     private final MessagesConfig messages;
     private final CheckedUserService checkedUserService;
     private final Server server;
 
-    public UserArgument(MessagesConfig messages, CheckedUserService checkedUserService, Server server) {
+    public CheckedUserArgument(MessagesConfig messages, CheckedUserService checkedUserService, Server server) {
         this.messages = messages;
         this.checkedUserService = checkedUserService;
         this.server = server;

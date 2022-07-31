@@ -33,6 +33,7 @@ dependencies {
 
     // Cdn
     implementation("net.dzikoysk:cdn:1.13.23")
+    implementation("org.panda-lang.utilities:di:1.5.3")
 
     // bStats
     implementation("org.bstats:bstats-bukkit:3.0.0")

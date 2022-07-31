@@ -43,7 +43,7 @@ public class ConfigManager {
     }
 
     public void reload() {
-        for (ReloadableConfig config : configs) {
+        for (ReloadableConfig config : this.configs) {
             load(config);
         }
     }
