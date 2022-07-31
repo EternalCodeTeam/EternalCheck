@@ -6,11 +6,11 @@ import net.dzikoysk.cdn.source.Source;
 
 import java.io.File;
 
-public class DataConfig implements ReloadableConfig {
+public class CheckedUserDataConfig implements ReloadableConfig {
 
     @Override
     public Resource resource(File folder) {
-        return Source.of(folder, "data"+ File.separator +"checkedusers.data");
+        return Source.of(folder, "data" + File.separator + "checkedusers.data");
     }
 
     public int checkedUsers = 0;

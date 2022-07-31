@@ -7,7 +7,7 @@ import com.eternalcode.check.command.implementation.CheckCommand;
 import com.eternalcode.check.command.message.InvalidUseMessage;
 import com.eternalcode.check.command.message.PermissionMessage;
 import com.eternalcode.check.config.ConfigManager;
-import com.eternalcode.check.config.implementation.DataConfig;
+import com.eternalcode.check.config.implementation.CheckedUserDataConfig;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.controller.CheckedUserChatController;
@@ -39,7 +39,7 @@ public final class EternalCheck extends JavaPlugin {
     private ConfigManager configManager;
     private PluginConfig config;
     private MessagesConfig messages;
-    private DataConfig data;
+    private CheckedUserDataConfig data;
 
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
@@ -60,7 +60,7 @@ public final class EternalCheck extends JavaPlugin {
 
         this.config = new PluginConfig();
         this.messages = new MessagesConfig();
-        this.data = new DataConfig();
+        this.data = new CheckedUserDataConfig();
 
         this.configManager.load(this.config);
         this.configManager.load(this.messages);
@@ -78,7 +78,7 @@ public final class EternalCheck extends JavaPlugin {
 
         this.checkedUserService = new CheckedUserService();
 
-        this.liteCommands = LiteBukkitFactory.builder(this.getServer(), "EternalCheck")
+        this.liteCommands = LiteBukkitFactory.builder(this.getServer(), "eternalcheck")
                 .argument(Player.class, new PlayerArgument(this.messages, server))
                 .argument(CheckedUser.class, new CheckedUserArgument(this.messages, this.checkedUserService, server))
 
@@ -130,7 +130,7 @@ public final class EternalCheck extends JavaPlugin {
         return this.messages;
     }
 
-    public DataConfig getDataConfig() {
+    public CheckedUserDataConfig getDataConfig() {
         return this.data;
     }
 

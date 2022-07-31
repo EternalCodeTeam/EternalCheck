@@ -2,7 +2,7 @@ package com.eternalcode.check.command.implementation;
 
 import com.eternalcode.check.NotificationAnnouncer;
 import com.eternalcode.check.config.ConfigManager;
-import com.eternalcode.check.config.implementation.DataConfig;
+import com.eternalcode.check.config.implementation.CheckedUserDataConfig;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.shared.position.PositionAdapter;
@@ -28,9 +28,9 @@ public class CheckCommand {
     private final CheckedUserService checkedUserService;
     private final Server server;
     private final NotificationAnnouncer announcer;
-    private final DataConfig data;
+    private final CheckedUserDataConfig data;
 
-    public CheckCommand(ConfigManager configManager, MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer, DataConfig data) {
+    public CheckCommand(ConfigManager configManager, MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer, CheckedUserDataConfig data) {
         this.configManager = configManager;
         this.messages = messages;
         this.config = config;
