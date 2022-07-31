@@ -9,9 +9,9 @@ import com.eternalcode.check.command.message.PermissionMessage;
 import com.eternalcode.check.config.ConfigManager;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
-import com.eternalcode.check.controller.CheckedPlayerChatController;
-import com.eternalcode.check.controller.CheckedPlayerCommandController;
-import com.eternalcode.check.controller.CheckedPlayerMoveController;
+import com.eternalcode.check.controller.CheckedUserChatController;
+import com.eternalcode.check.controller.CheckedUserCommandController;
+import com.eternalcode.check.controller.CheckedUserMoveController;
 import com.eternalcode.check.controller.LogoutPunishmentController;
 import com.eternalcode.check.shared.legacy.LegacyColorProcessor;
 import com.eternalcode.check.user.CheckedUser;
@@ -87,9 +87,9 @@ public final class EternalCheck extends JavaPlugin {
                 .register();
 
         Stream.of(
-                new CheckedPlayerChatController(this.config, this.checkedUserService),
-                new CheckedPlayerCommandController(this.messages, this.config, this.checkedUserService, this.notificationAnnouncer),
-                new CheckedPlayerMoveController(this.config, this.checkedUserService),
+                new CheckedUserChatController(this.config, this.checkedUserService),
+                new CheckedUserCommandController(this.messages, this.config, this.checkedUserService, this.notificationAnnouncer),
+                new CheckedUserMoveController(this.config, this.checkedUserService),
                 new LogoutPunishmentController(this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer)
         ).forEach(listener -> server.getPluginManager().registerEvents(listener, this));
 

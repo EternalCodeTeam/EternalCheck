@@ -49,7 +49,7 @@ public class AdmitCommand {
 
         Formatter formatter = new Formatter()
                 .register("{PLAYER}", user.getName())
-                .register("{ADMIN}", user.getAdmin());
+                .register("{ADMIN}", user.getChecker());
 
         for (Player all : this.server.getOnlinePlayers()) {
             this.messages.check.broadcast.admit.forEach(message -> this.announcer.annouceMessage(all.getUniqueId(), formatter.format(message)));

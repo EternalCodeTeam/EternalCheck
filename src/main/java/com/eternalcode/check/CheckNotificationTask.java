@@ -36,7 +36,7 @@ public final class CheckNotificationTask implements Runnable {
 
             Formatter formatter = new Formatter()
                     .register("{PLAYER}", user.getName())
-                    .register("{ADMIN}", user.getAdmin());
+                    .register("{ADMIN}", user.getChecker());
 
             if (this.config.settings.title.taskTitleMessageEnabled) {
                 this.announcer.annouceTitle(userUniqueId, this.messages.check.task.title, this.messages.check.task.subTitle, this.stay, this.fadeOut, this.fadeIn);
