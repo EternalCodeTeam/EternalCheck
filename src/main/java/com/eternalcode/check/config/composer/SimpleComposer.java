@@ -1,4 +1,4 @@
-package com.eternalcode.check.configuration.composer;
+package com.eternalcode.check.config.composer;
 
 import net.dzikoysk.cdn.serdes.Composer;
 import net.dzikoysk.cdn.serdes.SimpleDeserializer;
