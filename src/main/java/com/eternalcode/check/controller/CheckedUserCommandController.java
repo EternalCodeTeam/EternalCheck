@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.UUID;
 
-public class CheckedPlayerCommandController implements Listener {
+public class CheckedUserCommandController implements Listener {
 
     private final MessagesConfig messages;
     private final PluginConfig config;
@@ -19,7 +19,7 @@ public class CheckedPlayerCommandController implements Listener {
     private final NotificationAnnouncer announcer;
 
 
-    public CheckedPlayerCommandController(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, NotificationAnnouncer announcer) {
+    public CheckedUserCommandController(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, NotificationAnnouncer announcer) {
         this.messages = messages;
         this.config = config;
         this.checkedUserService = checkedUserService;

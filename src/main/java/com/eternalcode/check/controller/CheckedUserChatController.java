@@ -11,12 +11,12 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class CheckedPlayerChatController implements Listener {
+public class CheckedUserChatController implements Listener {
 
     private final PluginConfig config;
     private final CheckedUserService checkedUserService;
 
-    public CheckedPlayerChatController(PluginConfig config, CheckedUserService checkedUserService) {
+    public CheckedUserChatController(PluginConfig config, CheckedUserService checkedUserService) {
         this.config = config;
         this.checkedUserService = checkedUserService;
     }
@@ -38,7 +38,7 @@ public class CheckedPlayerChatController implements Listener {
 
             CheckedUser user = userOptional.get();
 
-            if (player.getName().equals(user.getAdmin())) {
+            if (player.getName().equals(user.getChecker())) {
                 continue;
             }
 

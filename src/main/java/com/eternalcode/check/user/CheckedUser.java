@@ -9,13 +9,13 @@ public class CheckedUser {
 
     private final UUID uniqueId;
     private final String name;
-    private final String admin;
+    private final String checker;
     private final Position lastPosition;
 
-    CheckedUser(UUID uniqueId, String name, String admin, Position lastPosition) {
+    CheckedUser(UUID uniqueId, String name, String checker, Position lastPosition) {
         this.uniqueId = uniqueId;
         this.name = name;
-        this.admin = admin;
+        this.checker = checker;
         this.lastPosition = lastPosition;
     }
 
@@ -27,8 +27,8 @@ public class CheckedUser {
         return this.name;
     }
 
-    public String getAdmin() {
-        return this.admin;
+    public String getChecker() {
+        return this.checker;
     }
 
     public Position getLastPosition() {
@@ -46,11 +46,11 @@ public class CheckedUser {
 
         CheckedUser user = (CheckedUser) o;
 
-        return this.uniqueId.equals(user.uniqueId) && this.admin.equals(user.admin);
+        return this.uniqueId.equals(user.uniqueId) && this.checker.equals(user.checker);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.uniqueId, this.admin);
+        return Objects.hash(this.uniqueId, this.checker);
     }
 }

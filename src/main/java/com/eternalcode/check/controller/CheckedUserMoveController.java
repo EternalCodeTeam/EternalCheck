@@ -9,12 +9,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.UUID;
 
-public class CheckedPlayerMoveController implements Listener {
+public class CheckedUserMoveController implements Listener {
 
     private final PluginConfig config;
     private final CheckedUserService checkedUserService;
 
-    public CheckedPlayerMoveController(PluginConfig config, CheckedUserService checkedUserService) {
+    public CheckedUserMoveController(PluginConfig config, CheckedUserService checkedUserService) {
         this.config = config;
         this.checkedUserService = checkedUserService;
     }

@@ -11,21 +11,21 @@ import java.util.UUID;
 
 public class CheckedUserService {
 
-    private final Map<UUID, CheckedUser> userMap = new HashMap<>();
+    private final Map<UUID, CheckedUser> checkedUsers = new HashMap<>();
 
     public void create(UUID uniqueId, String name, String admin, Position lastPosition) {
-        this.userMap.put(uniqueId, new CheckedUser(uniqueId, name, admin, lastPosition));
+        this.checkedUsers.put(uniqueId, new CheckedUser(uniqueId, name, admin, lastPosition));
     }
 
     public Optional<CheckedUser> find(UUID uniqueId) {
-        return Optional.ofNullable(this.userMap.get(uniqueId));
+        return Optional.ofNullable(this.checkedUsers.get(uniqueId));
     }
 
     public void remove(UUID uniqueId) {
-        this.userMap.remove(uniqueId);
+        this.checkedUsers.remove(uniqueId);
     }
 
     public Collection<CheckedUser> getUsers() {
-        return Collections.unmodifiableCollection(this.userMap.values());
+        return Collections.unmodifiableCollection(this.checkedUsers.values());
     }
 }
