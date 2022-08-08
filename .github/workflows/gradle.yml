@@ -28,7 +28,7 @@ jobs:
             -   name: Build
                 run: ./gradlew build
             -   name: Upload JAR
-                uses: actions/upload-artifact@v2.2.4
+                uses: actions/upload-artifact@v2.3.1
                 with:
                     name: "Successfully build EternalCheck JDK${{ matrix.jdk }}"
                     path: "build/libs/EternalCheck*.jar"
