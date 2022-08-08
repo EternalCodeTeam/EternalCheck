@@ -29,7 +29,7 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.11.0")
 
     // LiteCommands
-    implementation("dev.rollczi.litecommands:bukkit:2.3.3")
+    implementation("dev.rollczi.litecommands:bukkit:2.4.2")
 
     // Cdn
     implementation("net.dzikoysk:cdn:1.14.0")
