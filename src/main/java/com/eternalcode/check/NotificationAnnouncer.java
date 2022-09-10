@@ -18,7 +18,7 @@ public final class NotificationAnnouncer {
 		this.miniMessage = miniMessage;
 	}
 
-	public void annouceTitle(UUID uniqueId, String title, String subTitle, Duration fadeIn, Duration stay, Duration fadeOut) {
+	public void announceTitle(UUID uniqueId, String title, String subTitle, Duration fadeIn, Duration stay, Duration fadeOut) {
 		Audience audience = this.audienceProvider.player(uniqueId);
 
 		Title.Times titleTimes = Title.Times.times(fadeIn, stay, fadeOut);
@@ -27,7 +27,7 @@ public final class NotificationAnnouncer {
 		audience.showTitle(titlePart);
 	}
 
-	public void annouceActionBar(UUID uniqueId, String message) {
+	public void announceActionBar(UUID uniqueId, String message) {
 		this.audienceProvider.player(uniqueId).sendMessage(this.miniMessage.deserialize(message));
 	}
 

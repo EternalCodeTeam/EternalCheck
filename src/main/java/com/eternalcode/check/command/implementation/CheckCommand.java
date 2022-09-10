@@ -100,7 +100,7 @@ public class CheckCommand {
 		this.messages.check.start.startMessage.forEach(message -> this.announcer.announceMessage(playerArgument.getUniqueId(), formatter.format(message)));
 
 		if (this.config.settings.title.startTitleMessageEnabled) {
-			this.announcer.annouceTitle(playerArgument.getUniqueId(), formatter.format(this.messages.check.start.startTitle),
+			this.announcer.announceTitle(playerArgument.getUniqueId(), formatter.format(this.messages.check.start.startTitle),
 					formatter.format(this.messages.check.start.startSubTitle),
 					this.config.settings.title.fadeIn,
 					this.config.settings.title.stay,
