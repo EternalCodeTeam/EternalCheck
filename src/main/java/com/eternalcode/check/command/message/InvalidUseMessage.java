@@ -27,7 +27,8 @@ public class InvalidUseMessage implements InvalidUsageHandler<CommandSender> {
                 for (String schem : scheme.getSchematics()) {
                     this.announcer.announceMessage(player.getUniqueId(), this.messagesConfig.argument.correctUsageList.replace("{USAGE}", schem));
                 }
-            } else {
+            }
+             else {
                 this.announcer.announceMessage(player.getUniqueId(), this.messagesConfig.argument.correctUsage.replace("{USAGE}", scheme.getSchematics().get(0)));
             }
         }

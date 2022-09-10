@@ -14,7 +14,7 @@ import panda.utilities.text.Formatter;
 
 import java.util.Optional;
 
-@Section(route = "admit", aliases = {"przyznajsie", "ff"})
+@Section(route = "admit", aliases = { "przyznajsie", "ff"} )
 public class AdmitCommand {
 
     private final MessagesConfig messages;
