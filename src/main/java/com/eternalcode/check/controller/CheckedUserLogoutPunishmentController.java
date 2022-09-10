@@ -16,38 +16,38 @@ import java.util.UUID;
 
 public class CheckedUserLogoutPunishmentController implements Listener {
 
-	private final MessagesConfig messages;
-	private final PluginConfig config;
-	private final CheckedUserService checkedUserService;
-	private final Server server;
-	private final NotificationAnnouncer announcer;
+    private final MessagesConfig messages;
+    private final PluginConfig config;
+    private final CheckedUserService checkedUserService;
+    private final Server server;
+    private final NotificationAnnouncer announcer;
 
-	public CheckedUserLogoutPunishmentController(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer) {
-		this.messages = messages;
-		this.config = config;
-		this.checkedUserService = checkedUserService;
-		this.server = server;
-		this.announcer = announcer;
-	}
+    public CheckedUserLogoutPunishmentController(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer) {
+        this.messages = messages;
+        this.config = config;
+        this.checkedUserService = checkedUserService;
+        this.server = server;
+        this.announcer = announcer;
+    }
 
-	@EventHandler
-	public void onQuit(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		UUID uniqueId = player.getUniqueId();
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        UUID uniqueId = player.getUniqueId();
 
-		this.checkedUserService.find(uniqueId).ifPresent(user -> {
+        this.checkedUserService.find(uniqueId).ifPresent(user -> {
 
-			Formatter formatter = new Formatter()
-					.register("{PLAYER}", user.getName())
-					.register("{ADMIN}", player.getName());
+            Formatter formatter = new Formatter()
+                    .register("{PLAYER}", user.getName())
+                    .register("{ADMIN}", player.getName());
 
-			for (Player all : this.server.getOnlinePlayers()) {
-				this.messages.check.broadcast.logoutCheck.forEach(message -> this.announcer.announceMessage(all.getUniqueId(), formatter.format(message)));
-			}
+            for (Player all : this.server.getOnlinePlayers()) {
+                this.messages.check.broadcast.logoutCheck.forEach(message -> this.announcer.announceMessage(all.getUniqueId(), formatter.format(message)));
+            }
 
-			this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.logout, "{PLAYER}", player.getName()));
+            this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.logout, "{PLAYER}", player.getName()));
 
-			this.checkedUserService.unmarkChecked(uniqueId);
-		});
-	}
+            this.checkedUserService.unmarkChecked(uniqueId);
+        });
+    }
 }

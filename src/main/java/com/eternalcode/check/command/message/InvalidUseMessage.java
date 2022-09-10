@@ -10,26 +10,26 @@ import org.bukkit.entity.Player;
 
 public class InvalidUseMessage implements InvalidUsageHandler<CommandSender> {
 
-	private final MessagesConfig messagesConfig;
-	private final NotificationAnnouncer announcer;
+    private final MessagesConfig messagesConfig;
+    private final NotificationAnnouncer announcer;
 
-	public InvalidUseMessage(MessagesConfig messagesConfig, NotificationAnnouncer announcer) {
-		this.messagesConfig = messagesConfig;
-		this.announcer = announcer;
-	}
+    public InvalidUseMessage(MessagesConfig messagesConfig, NotificationAnnouncer announcer) {
+        this.messagesConfig = messagesConfig;
+        this.announcer = announcer;
+    }
 
-	@Override
-	public void handle(CommandSender commandSender, LiteInvocation invocation, Schematic scheme) {
-		if (commandSender instanceof Player) {
-			Player player = (Player) commandSender;
+    @Override
+    public void handle(CommandSender commandSender, LiteInvocation invocation, Schematic scheme) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
 
-			if (scheme.getSchematics().size() > 1) {
-				for (String schem : scheme.getSchematics()) {
-					this.announcer.announceMessage(player.getUniqueId(), this.messagesConfig.argument.correctUsageList.replace("{USAGE}", schem));
-				}
-			} else {
-				this.announcer.announceMessage(player.getUniqueId(), this.messagesConfig.argument.correctUsage.replace("{USAGE}", scheme.getSchematics().get(0)));
-			}
-		}
-	}
+            if (scheme.getSchematics().size() > 1) {
+                for (String schem : scheme.getSchematics()) {
+                    this.announcer.announceMessage(player.getUniqueId(), this.messagesConfig.argument.correctUsageList.replace("{USAGE}", schem));
+                }
+            } else {
+                this.announcer.announceMessage(player.getUniqueId(), this.messagesConfig.argument.correctUsage.replace("{USAGE}", scheme.getSchematics().get(0)));
+            }
+        }
+    }
 }

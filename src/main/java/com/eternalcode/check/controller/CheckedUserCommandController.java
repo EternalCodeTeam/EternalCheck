@@ -13,37 +13,37 @@ import java.util.UUID;
 
 public class CheckedUserCommandController implements Listener {
 
-	private final MessagesConfig messages;
-	private final PluginConfig config;
-	private final CheckedUserService checkedUserService;
-	private final NotificationAnnouncer announcer;
+    private final MessagesConfig messages;
+    private final PluginConfig config;
+    private final CheckedUserService checkedUserService;
+    private final NotificationAnnouncer announcer;
 
 
-	public CheckedUserCommandController(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, NotificationAnnouncer announcer) {
-		this.messages = messages;
-		this.config = config;
-		this.checkedUserService = checkedUserService;
-		this.announcer = announcer;
-	}
+    public CheckedUserCommandController(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, NotificationAnnouncer announcer) {
+        this.messages = messages;
+        this.config = config;
+        this.checkedUserService = checkedUserService;
+        this.announcer = announcer;
+    }
 
-	@EventHandler
-	public void onCommand(PlayerCommandPreprocessEvent event) {
-		if (this.config.settings.canUseCommand) {
-			return;
-		}
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent event) {
+        if (this.config.settings.canUseCommand) {
+            return;
+        }
 
-		Player player = event.getPlayer();
-		UUID uniqueId = player.getUniqueId();
-		String command = event.getMessage().split(" ")[0];
+        Player player = event.getPlayer();
+        UUID uniqueId = player.getUniqueId();
+        String command = event.getMessage().split(" ")[0];
 
-		this.checkedUserService.find(uniqueId).ifPresent(user -> {
-			if (this.config.settings.availableCommands.contains(command)) {
-				return;
-			}
+        this.checkedUserService.find(uniqueId).ifPresent(user -> {
+            if (this.config.settings.availableCommands.contains(command)) {
+                return;
+            }
 
-			event.setCancelled(true);
-			this.announcer.announceMessage(uniqueId, this.messages.argument.cantUseCommand);
+            event.setCancelled(true);
+            this.announcer.announceMessage(uniqueId, this.messages.argument.cantUseCommand);
 
-		});
-	}
+        });
+    }
 }
