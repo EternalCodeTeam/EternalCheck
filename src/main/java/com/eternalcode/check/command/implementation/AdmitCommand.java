@@ -14,45 +14,45 @@ import panda.utilities.text.Formatter;
 
 import java.util.Optional;
 
-@Section(route = "admit", aliases = { "przyznajsie", "ff" })
+@Section(route = "admit", aliases = {"przyznajsie", "ff"})
 public class AdmitCommand {
 
-    private final MessagesConfig messages;
-    private final PluginConfig config;
-    private final CheckedUserService checkedUserService;
-    private final Server server;
-    private final NotificationAnnouncer announcer;
+	private final MessagesConfig messages;
+	private final PluginConfig config;
+	private final CheckedUserService checkedUserService;
+	private final Server server;
+	private final NotificationAnnouncer announcer;
 
-    public AdmitCommand(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer) {
-        this.messages = messages;
-        this.config = config;
-        this.checkedUserService = checkedUserService;
-        this.server = server;
-        this.announcer = announcer;
-    }
+	public AdmitCommand(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer) {
+		this.messages = messages;
+		this.config = config;
+		this.checkedUserService = checkedUserService;
+		this.server = server;
+		this.announcer = announcer;
+	}
 
-    @Execute
-    public void execute(Player player) {
-        Optional<CheckedUser> userOptional = this.checkedUserService.find(player.getUniqueId());
+	@Execute
+	public void execute(Player player) {
+		Optional<CheckedUser> userOptional = this.checkedUserService.find(player.getUniqueId());
 
-        if (!userOptional.isPresent()) {
-            this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.youArentChecked);
+		if (!userOptional.isPresent()) {
+			this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.youArentChecked);
 
-            return;
-        }
+			return;
+		}
 
-        CheckedUser user = userOptional.get();
+		CheckedUser user = userOptional.get();
 
-        this.checkedUserService.unmarkChecked(player.getUniqueId());
+		this.checkedUserService.unmarkChecked(player.getUniqueId());
 
-        this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.admit, "{PLAYER}", player.getName()));
+		this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.admit, "{PLAYER}", player.getName()));
 
-        Formatter formatter = new Formatter()
-                .register("{PLAYER}", user.getName())
-                .register("{ADMIN}", user.getChecker());
+		Formatter formatter = new Formatter()
+				.register("{PLAYER}", user.getName())
+				.register("{ADMIN}", user.getChecker());
 
-        for (Player all : this.server.getOnlinePlayers()) {
-            this.messages.check.broadcast.admit.forEach(message -> this.announcer.annouceMessage(all.getUniqueId(), formatter.format(message)));
-        }
-    }
+		for (Player all : this.server.getOnlinePlayers()) {
+			this.messages.check.broadcast.admit.forEach(message -> this.announcer.announceMessage(all.getUniqueId(), formatter.format(message)));
+		}
+	}
 }
