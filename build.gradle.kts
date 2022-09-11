@@ -32,7 +32,7 @@ dependencies {
     implementation("dev.rollczi.litecommands:bukkit:2.4.2")
 
     // Cdn
-    implementation("net.dzikoysk:cdn:1.14.0")
+    implementation("net.dzikoysk:cdn:1.14.1")
 
     // bStats
     implementation("org.bstats:bstats-bukkit:3.0.0")
