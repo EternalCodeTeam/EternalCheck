@@ -42,7 +42,7 @@ public class CheckedUserLogoutPunishmentController implements Listener {
                     .register("{ADMIN}", player.getName());
 
             for (Player all : this.server.getOnlinePlayers()) {
-                this.messages.check.broadcast.logoutCheck.forEach(message -> this.announcer.annouceMessage(all.getUniqueId(), formatter.format(message)));
+                this.messages.check.broadcast.logoutCheck.forEach(message -> this.announcer.announceMessage(all.getUniqueId(), formatter.format(message)));
             }
 
             this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.logout, "{PLAYER}", player.getName()));

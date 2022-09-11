@@ -47,7 +47,7 @@ public class CheckCommand {
 
         this.configManager.save(this.config);
 
-        this.announcer.annouceMessage(player.getUniqueId(), this.messages.check.adminLocationSet);
+        this.announcer.announceMessage(player.getUniqueId(), this.messages.check.adminLocationSet);
     }
 
     @Execute(route = "reload", aliases = "rl")
@@ -55,26 +55,26 @@ public class CheckCommand {
     public void executeReload(Player player) {
         this.configManager.reload();
 
-        this.announcer.annouceMessage(player.getUniqueId(), this.messages.check.adminReload);
+        this.announcer.announceMessage(player.getUniqueId(), this.messages.check.adminReload);
     }
 
 
     @Execute(route = "start", aliases = "rozpocznij", min = 1)
     public void executeStart(Player player, @Arg @Name("player") Player playerArgument) {
         if (playerArgument.hasPermission("eternalcheck.bypass")) {
-            this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.bypass);
+            this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.bypass);
 
             return;
         }
 
         if (this.checkedUserService.find(playerArgument.getUniqueId()).isPresent()) {
-            this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.isChecking);
+            this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.isChecking);
 
             return;
         }
 
         if (this.config.checkLocation.getWorld() == null || this.config.checkLocation == null) {
-            this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.roomNotSet);
+            this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.roomNotSet);
 
             return;
         }
@@ -91,16 +91,16 @@ public class CheckCommand {
                 .register("{PLAYER}", playerArgument.getName())
                 .register("{ADMIN}", player.getName());
 
-        this.announcer.annouceMessage(player.getUniqueId(), formatter.format(this.messages.check.adminStart));
+        this.announcer.announceMessage(player.getUniqueId(), formatter.format(this.messages.check.adminStart));
 
         for (Player all : this.server.getOnlinePlayers()) {
-            this.messages.check.broadcast.startCheck.forEach(message -> this.announcer.annouceMessage(all.getUniqueId(), formatter.format(message)));
+            this.messages.check.broadcast.startCheck.forEach(message -> this.announcer.announceMessage(all.getUniqueId(), formatter.format(message)));
         }
 
-        this.messages.check.start.startMessage.forEach(message -> this.announcer.annouceMessage(playerArgument.getUniqueId(), formatter.format(message)));
+        this.messages.check.start.startMessage.forEach(message -> this.announcer.announceMessage(playerArgument.getUniqueId(), formatter.format(message)));
 
         if (this.config.settings.title.startTitleMessageEnabled) {
-            this.announcer.annouceTitle(playerArgument.getUniqueId(), formatter.format(this.messages.check.start.startTitle),
+            this.announcer.announceTitle(playerArgument.getUniqueId(), formatter.format(this.messages.check.start.startTitle),
                     formatter.format(this.messages.check.start.startSubTitle),
                     this.config.settings.title.fadeIn,
                     this.config.settings.title.stay,
@@ -116,14 +116,14 @@ public class CheckCommand {
         playerArgument.teleport(PositionAdapter.convert(user.getLastPosition()));
         this.checkedUserService.unmarkChecked(user.getUniqueId());
 
-        this.announcer.annouceMessage(player.getUniqueId(), this.messages.check.adminEnd.replace("{PLAYER}", playerArgument.getName()));
+        this.announcer.announceMessage(player.getUniqueId(), this.messages.check.adminEnd.replace("{PLAYER}", playerArgument.getName()));
 
         Formatter formatter = new Formatter()
                 .register("{PLAYER}", user.getName())
                 .register("{ADMIN}", player.getName());
 
         for (Player all : this.server.getOnlinePlayers()) {
-            this.messages.check.broadcast.endCheck.forEach(message -> this.announcer.annouceMessage(all.getUniqueId(), formatter.format(message)));
+            this.messages.check.broadcast.endCheck.forEach(message -> this.announcer.announceMessage(all.getUniqueId(), formatter.format(message)));
         }
     }
 
@@ -134,14 +134,14 @@ public class CheckCommand {
         playerArgument.teleport(PositionAdapter.convert(user.getLastPosition()));
         this.checkedUserService.unmarkChecked(user.getUniqueId());
 
-        this.announcer.annouceMessage(player.getUniqueId(), this.messages.check.adminBan.replace("{PLAYER}", playerArgument.getName()));
+        this.announcer.announceMessage(player.getUniqueId(), this.messages.check.adminBan.replace("{PLAYER}", playerArgument.getName()));
 
         Formatter formatter = new Formatter()
                 .register("{PLAYER}", user.getName())
                 .register("{ADMIN}", player.getName());
 
         for (Player all : this.server.getOnlinePlayers()) {
-            this.messages.check.broadcast.banCheck.forEach(message -> this.announcer.annouceMessage(all.getUniqueId(), formatter.format(message)));
+            this.messages.check.broadcast.banCheck.forEach(message -> this.announcer.announceMessage(all.getUniqueId(), formatter.format(message)));
         }
 
         this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.ban, "{PLAYER}", user.getName()));

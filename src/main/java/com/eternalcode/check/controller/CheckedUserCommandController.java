@@ -42,7 +42,7 @@ public class CheckedUserCommandController implements Listener {
             }
 
             event.setCancelled(true);
-            this.announcer.annouceMessage(uniqueId, this.messages.argument.cantUseCommand);
+            this.announcer.announceMessage(uniqueId, this.messages.argument.cantUseCommand);
 
         });
     }

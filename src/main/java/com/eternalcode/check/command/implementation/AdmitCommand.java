@@ -14,7 +14,7 @@ import panda.utilities.text.Formatter;
 
 import java.util.Optional;
 
-@Section(route = "admit", aliases = { "przyznajsie", "ff" })
+@Section(route = "admit", aliases = { "przyznajsie", "ff"} )
 public class AdmitCommand {
 
     private final MessagesConfig messages;
@@ -36,7 +36,7 @@ public class AdmitCommand {
         Optional<CheckedUser> userOptional = this.checkedUserService.find(player.getUniqueId());
 
         if (!userOptional.isPresent()) {
-            this.announcer.annouceMessage(player.getUniqueId(), this.messages.argument.youArentChecked);
+            this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.youArentChecked);
 
             return;
         }
@@ -52,7 +52,7 @@ public class AdmitCommand {
                 .register("{ADMIN}", user.getChecker());
 
         for (Player all : this.server.getOnlinePlayers()) {
-            this.messages.check.broadcast.admit.forEach(message -> this.announcer.annouceMessage(all.getUniqueId(), formatter.format(message)));
+            this.messages.check.broadcast.admit.forEach(message -> this.announcer.announceMessage(all.getUniqueId(), formatter.format(message)));
         }
     }
 }

@@ -39,15 +39,15 @@ public final class CheckNotificationTask implements Runnable {
                     .register("{ADMIN}", user.getChecker());
 
             if (this.config.settings.title.taskTitleMessageEnabled) {
-                this.announcer.annouceTitle(userUniqueId, this.messages.check.task.title, this.messages.check.task.subTitle, this.stay, this.fadeOut, this.fadeIn);
+                this.announcer.announceTitle(userUniqueId, this.messages.check.task.title, this.messages.check.task.subTitle, this.stay, this.fadeOut, this.fadeIn);
             }
 
             if (this.config.settings.taskActionBarEnabled) {
-                this.announcer.annouceActionBar(userUniqueId, this.messages.check.task.actionBar);
+                this.announcer.announceActionBar(userUniqueId, this.messages.check.task.actionBar);
             }
 
             if (this.config.settings.taskMessageEnabled) {
-                this.messages.check.task.message.forEach(message -> this.announcer.annouceMessage(userUniqueId, formatter.format(message)));
+                this.messages.check.task.message.forEach(message -> this.announcer.announceMessage(userUniqueId, formatter.format(message)));
             }
         }
     }

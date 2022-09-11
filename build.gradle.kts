@@ -14,7 +14,7 @@ repositories {
     mavenCentral()
     mavenLocal()
 
-    maven { url = uri("https://papermc.io/repo/repository/maven-public/")}
+    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
     maven { url = uri("https://repo.eternalcode.pl/releases") }
     maven { url = uri("https://maven.enginehub.org/repo") }
@@ -22,14 +22,14 @@ repositories {
 
 dependencies {
     // Spigot api
-    compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
 
     // Kyori Adventure
     implementation("net.kyori:adventure-platform-bukkit:4.1.2")
     implementation("net.kyori:adventure-text-minimessage:4.11.0")
 
     // LiteCommands
-    implementation("dev.rollczi.litecommands:bukkit:2.4.2")
+    implementation("dev.rollczi.litecommands:bukkit:2.5.0")
 
     // Cdn
     implementation("net.dzikoysk:cdn:1.14.0")
