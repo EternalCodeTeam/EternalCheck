@@ -4,6 +4,7 @@ plugins {
     id("java-library")
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
+    id("xyz.jpenilla.run-paper") version "2.0.0"
 }
 
 group = "com.eternalcode"
@@ -21,8 +22,8 @@ repositories {
 }
 
 dependencies {
-    // Spigot api
-    compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
+    // Spigot API
+    compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
 
     // Kyori Adventure
     implementation("net.kyori:adventure-platform-bukkit:4.2.0")
@@ -31,7 +32,7 @@ dependencies {
     // LiteCommands
     implementation("dev.rollczi.litecommands:bukkit:2.7.0")
 
-    // Cdn
+    // CDN
     implementation("net.dzikoysk:cdn:1.14.1")
 
     // bStats
@@ -56,6 +57,11 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(8))
 }
 
+tasks {
+    runServer {
+        minecraftVersion("1.19.3")
+    }
+}
 
 tasks.withType<ShadowJar> {
     archiveFileName.set("EternalCheck v${project.version}.jar")
