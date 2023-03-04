@@ -27,7 +27,7 @@ public final class CheckNotificationTask implements Runnable {
 
     @Override
     public void run() {
-        for (CheckedUser user : new ArrayList<>(this.checkedUserService.users())) {
+        for (CheckedUser user : new ArrayList<>(this.checkedUserService.checkedUsers())) {
             Player player = this.server.getPlayer(user.getUniqueId());
 
             if (player == null) {

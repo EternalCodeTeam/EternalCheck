@@ -29,7 +29,7 @@ public class CheckedUserService {
         this.checkedUsers.remove(uniqueId);
     }
 
-    public Collection<CheckedUser> users() {
+    public Collection<CheckedUser> checkedUsers() {
         return Collections.unmodifiableCollection(this.checkedUsers.values());
     }
 }
