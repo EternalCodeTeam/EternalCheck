@@ -1,4 +1,4 @@
-package com.eternalcode.check.controller;
+package com.eternalcode.check.user.controller;
 
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.user.CheckedUserService;
@@ -11,12 +11,12 @@ import java.util.UUID;
 
 public class CheckedUserMoveController implements Listener {
 
-    private final PluginConfig config;
     private final CheckedUserService checkedUserService;
+    private final PluginConfig config;
 
-    public CheckedUserMoveController(PluginConfig config, CheckedUserService checkedUserService) {
-        this.config = config;
+    public CheckedUserMoveController(CheckedUserService checkedUserService, PluginConfig config) {
         this.checkedUserService = checkedUserService;
+        this.config = config;
     }
 
     @EventHandler

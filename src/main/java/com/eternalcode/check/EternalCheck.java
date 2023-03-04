@@ -1,19 +1,31 @@
 package com.eternalcode.check;
 
+import com.eternalcode.check.caller.EventCaller;
+import com.eternalcode.check.command.CommandConfiguration;
 import com.eternalcode.check.command.argument.CheckedUserArgument;
 import com.eternalcode.check.command.argument.PlayerArgument;
+import com.eternalcode.check.command.configurer.CommandConfigurer;
+import com.eternalcode.check.command.handler.NotificationHandler;
 import com.eternalcode.check.command.implementation.AdmitCommand;
-import com.eternalcode.check.command.implementation.CheckCommand;
-import com.eternalcode.check.command.message.InvalidUseMessage;
-import com.eternalcode.check.command.message.PermissionMessage;
+import com.eternalcode.check.command.implementation.CheckBanCommand;
+import com.eternalcode.check.command.implementation.CheckEndCommand;
+import com.eternalcode.check.command.implementation.CheckReloadCommand;
+import com.eternalcode.check.command.implementation.CheckSetLocationCommand;
+import com.eternalcode.check.command.implementation.CheckStartCommand;
+import com.eternalcode.check.command.handler.InvalidUsageHandler;
+import com.eternalcode.check.command.handler.PermissionHandler;
 import com.eternalcode.check.config.ConfigManager;
 import com.eternalcode.check.config.implementation.CheckedUserDataConfig;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
-import com.eternalcode.check.controller.CheckedUserChatController;
-import com.eternalcode.check.controller.CheckedUserCommandController;
-import com.eternalcode.check.controller.CheckedUserLogoutPunishmentController;
-import com.eternalcode.check.controller.CheckedUserMoveController;
+import com.eternalcode.check.notification.Notification;
+import com.eternalcode.check.notification.NotificationAnnoucer;
+import com.eternalcode.check.updater.UpdaterNotificationController;
+import com.eternalcode.check.updater.UpdaterService;
+import com.eternalcode.check.user.controller.CheckedUserChatController;
+import com.eternalcode.check.user.controller.CheckedUserCommandController;
+import com.eternalcode.check.user.controller.CheckedUserLogoutPunishmentController;
+import com.eternalcode.check.user.controller.CheckedUserMoveController;
 import com.eternalcode.check.shared.legacy.LegacyColorProcessor;
 import com.eternalcode.check.user.CheckedUser;
 import com.eternalcode.check.user.CheckedUserService;
@@ -34,79 +46,95 @@ import java.util.stream.Stream;
 
 public final class EternalCheck extends JavaPlugin {
 
-    private static EternalCheck instance;
-
     private ConfigManager configManager;
-    private PluginConfig config;
+    private CheckedUserDataConfig checkedUserDataConfig;
+    private CommandConfiguration commandConfig;
     private MessagesConfig messages;
-    private CheckedUserDataConfig data;
+    private PluginConfig config;
 
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
 
-    private NotificationAnnouncer notificationAnnouncer;
+    private NotificationAnnoucer notificationAnnouncer;
 
     private CheckedUserService checkedUserService;
+
+    private EventCaller eventCaller;
+
+    private UpdaterService updaterService;
 
     private LiteCommands<CommandSender> liteCommands;
 
     @Override
     public void onEnable() {
-        instance = this;
-
         Server server = this.getServer();
 
         this.configManager = new ConfigManager(this.getDataFolder());
 
+        this.checkedUserDataConfig = new CheckedUserDataConfig();
+        this.commandConfig = new CommandConfiguration();
         this.config = new PluginConfig();
         this.messages = new MessagesConfig();
-        this.data = new CheckedUserDataConfig();
 
         this.configManager.load(this.config);
         this.configManager.load(this.messages);
-        this.configManager.load(this.data);
-
-        Metrics metrics = new Metrics(this, 15964);
-        metrics.addCustomChart(new SingleLineChart("checked_users", () -> this.data.getCheckedUsers()));
+        this.configManager.load(this.checkedUserDataConfig);
+        this.configManager.load(this.commandConfig);
 
         this.audienceProvider = BukkitAudiences.create(this);
         this.miniMessage = MiniMessage.builder()
                 .postProcessor(new LegacyColorProcessor())
                 .build();
 
-        this.notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
+        this.notificationAnnouncer = new NotificationAnnoucer(this.config, this.audienceProvider, this.miniMessage, server);
 
         this.checkedUserService = new CheckedUserService();
+
+        this.eventCaller = new EventCaller(server);
+
+        this.updaterService = new UpdaterService(this.getDescription());
 
         this.liteCommands = LiteBukkitFactory.builder(this.getServer(), "eternalcheck")
                 .argument(Player.class, new PlayerArgument(this.messages, server))
                 .argument(CheckedUser.class, new CheckedUserArgument(this.messages, this.checkedUserService, server))
 
-                .contextualBind(Player.class, new BukkitOnlyPlayerContextual(""))
+                .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>("Only players can use this command!"))
 
-                .permissionHandler(new PermissionMessage(this.messages, this.notificationAnnouncer))
-                .invalidUsageHandler(new InvalidUseMessage(this.messages, this.notificationAnnouncer))
+                .permissionHandler(new PermissionHandler(this.messages, this.notificationAnnouncer))
+                .invalidUsageHandler(new InvalidUsageHandler(this.messages, this.notificationAnnouncer))
+                .resultHandler(Notification.class, new NotificationHandler(this.notificationAnnouncer))
 
-                .commandInstance(new AdmitCommand(this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer))
-                .commandInstance(new CheckCommand(this.configManager, this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer, data))
+                .commandInstance(
+                        new AdmitCommand(this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer, this.eventCaller),
+                        new CheckBanCommand(this.checkedUserService, this.notificationAnnouncer, this.messages, this.eventCaller, this.config, server),
+                        new CheckEndCommand(this.checkedUserService, this.notificationAnnouncer, this.eventCaller, this.messages, server),
+                        new CheckReloadCommand(this.notificationAnnouncer, this.configManager, this.messages),
+                        new CheckSetLocationCommand(this.notificationAnnouncer, this.configManager, this.messages, this.config),
+                        new CheckStartCommand(this.checkedUserDataConfig, this.checkedUserService, this.notificationAnnouncer, this.configManager, this.messages, this.eventCaller, this.config)
+                )
+
+                .commandGlobalEditor(new CommandConfigurer(this.commandConfig))
 
                 .register();
 
+        Metrics metrics = new Metrics(this, 15964);
+        metrics.addCustomChart(new SingleLineChart("checked_users", () -> this.checkedUserDataConfig.getCheckedUsers()));
+
         Stream.of(
-                new CheckedUserChatController(this.config, this.checkedUserService),
-                new CheckedUserCommandController(this.messages, this.config, this.checkedUserService, this.notificationAnnouncer),
-                new CheckedUserMoveController(this.config, this.checkedUserService),
-                new CheckedUserLogoutPunishmentController(this.messages, this.config, this.checkedUserService, server, this.notificationAnnouncer)
+                new CheckedUserChatController(this.checkedUserService, this.config),
+                new CheckedUserCommandController(this.checkedUserService, this.notificationAnnouncer, this.messages, this.config),
+                new CheckedUserMoveController(this.checkedUserService, this.config),
+                new CheckedUserLogoutPunishmentController(this.checkedUserService, this.notificationAnnouncer, this.messages, this.config, eventCaller, server),
+                new UpdaterNotificationController(this.notificationAnnouncer, this.updaterService, this.config)
         ).forEach(listener -> server.getPluginManager().registerEvents(listener, this));
 
-        if (!this.config.settings.runnable.enabled) {
-            return;
+        if (this.config.settings.runnable.enabled) {
+            server.getScheduler().runTaskTimerAsynchronously(
+                    this,
+                    new CheckNotificationTask(this.checkedUserService, this.notificationAnnouncer, this.messages, server),
+                    20L,
+                    20L * this.config.settings.runnable.interval);
         }
-
-        server.getScheduler().runTaskTimerAsynchronously(this,
-                new CheckNotificationTask(this.messages, this.config, this.checkedUserService, this.notificationAnnouncer),
-                0L, 20L * this.config.settings.runnable.interval);
-
     }
 
     @Override
@@ -114,12 +142,16 @@ public final class EternalCheck extends JavaPlugin {
         this.liteCommands.getPlatform().unregisterAll();
     }
 
-    public static EternalCheck getInstance() {
-        return instance;
-    }
-
     public ConfigManager getConfigManager() {
         return this.configManager;
+    }
+
+    public CheckedUserDataConfig getDataConfig() {
+        return this.checkedUserDataConfig;
+    }
+
+    public CommandConfiguration getCommandConfig() {
+        return this.commandConfig;
     }
 
     public PluginConfig getPluginConfig() {
@@ -130,10 +162,6 @@ public final class EternalCheck extends JavaPlugin {
         return this.messages;
     }
 
-    public CheckedUserDataConfig getDataConfig() {
-        return this.data;
-    }
-
     public AudienceProvider getAudienceProvider() {
         return this.audienceProvider;
     }
@@ -142,12 +170,20 @@ public final class EternalCheck extends JavaPlugin {
         return this.miniMessage;
     }
 
-    public NotificationAnnouncer getNotificationAnnouncer() {
+    public NotificationAnnoucer getNotificationAnnouncer() {
         return this.notificationAnnouncer;
     }
 
     public CheckedUserService getUserService() {
         return this.checkedUserService;
+    }
+
+    public EventCaller getEventCaller() {
+        return this.eventCaller;
+    }
+
+    public UpdaterService getUpdaterService() {
+        return this.updaterService;
     }
 
     public LiteCommands<CommandSender> getLiteCommands() {

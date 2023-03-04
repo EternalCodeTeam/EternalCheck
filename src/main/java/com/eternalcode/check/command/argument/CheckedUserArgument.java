@@ -47,7 +47,7 @@ public class CheckedUserArgument implements OneArgument<CheckedUser> {
 
     @Override
     public List<Suggestion> suggest(LiteInvocation invocation) {
-        return this.checkedUserService.getUsers()
+        return this.checkedUserService.users()
                 .stream()
                 .map(CheckedUser::getName)
                 .map(Suggestion::of)

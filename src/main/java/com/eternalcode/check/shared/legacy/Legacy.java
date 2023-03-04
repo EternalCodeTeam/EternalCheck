@@ -17,10 +17,4 @@ public final class Legacy {
     public static Component component(String text) {
         return AMPERSAND_SERIALIZER.deserialize(text);
     }
-
-    public static List<Component> component(List<String> texts) {
-        return texts.stream()
-                .map(Legacy::component)
-                .collect(Collectors.toList());
-    }
 }

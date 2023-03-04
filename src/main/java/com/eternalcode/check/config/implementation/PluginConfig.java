@@ -14,16 +14,11 @@ import java.util.List;
 
 public class PluginConfig implements ReloadableConfig {
 
-    @Override
-    public Resource resource(File folder) {
-        return Source.of(folder, "config.yml");
-    }
-
     @Description({ "# ",
             "# EternalCheck - A simple plugin for checking suspicious players",
             "# ",
             "# Discord: https://dc.eternalcode.pl/",
-            "# Website: https://eternalcode.pl/", " " })
+            "# Website: https://discord.gg/NvZ6apa5sJ/", " " })
 
     @Description("# Settings")
     public Settings settings = new Settings();
@@ -34,6 +29,10 @@ public class PluginConfig implements ReloadableConfig {
     @Contextual
     public static class Settings {
 
+        @Description("# Whether the player after entering the server should receive information about the new version of the plugin?")
+        public boolean receiveUpdates = true;
+
+        @Description(" ")
         public Runnable runnable = new Runnable();
 
         @Description(" ")
@@ -55,20 +54,7 @@ public class PluginConfig implements ReloadableConfig {
             public Duration stay = Duration.ofSeconds(1);
             public Duration fadeIn = Duration.ofSeconds(2);
             public Duration fadeOut = Duration.ofSeconds(1);
-
-            @Description({ " ", "# Whether the title at the start of checking should be enabled?" })
-            public boolean startTitleMessageEnabled = true;
-
-            @Description({ " ", "# Whether the title in the task should be enabled?" })
-            public boolean taskTitleMessageEnabled = true;
-
         }
-
-        @Description({ " ", "# Whether the message in the task should be enabled?" })
-        public boolean taskMessageEnabled = true;
-
-        @Description({ " ", "# Whether the actionbar in the task should be enabled?" })
-        public boolean taskActionBarEnabled = true;
 
         @Description({ " ", "# Whether the checked player is to see only the messages of the checking admin?" })
         public boolean onlyMessageFromAdmin = true;
@@ -80,7 +66,7 @@ public class PluginConfig implements ReloadableConfig {
         public boolean canUseCommand = true;
 
         @Description({ " ", "# Available commands when checking,",
-                "# if canUseCommand is set to true" })
+                "# if canUseCommand is set to false" })
         public List<String> availableCommands = Arrays.asList("/admit", "/helpop", "/przyznajsie");
     }
 
@@ -97,6 +83,11 @@ public class PluginConfig implements ReloadableConfig {
         public String ban = "tempban {PLAYER} 14d Having cheats!";
     }
 
-    @Description({ " ", "# Check location - use \"/check set\" in game!" })
+    @Description({ " ", "# Check location - use \"/check setlocation\" in game!" })
     public Position checkLocation = new Position(0, 100, 0, 0.f, 0.f, "world");
+
+    @Override
+    public Resource resource(File folder) {
+        return Source.of(folder, "config.yml");
+    }
 }

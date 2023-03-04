@@ -1,12 +1,15 @@
 package com.eternalcode.check.command.implementation;
 
-import com.eternalcode.check.NotificationAnnouncer;
+import com.eternalcode.check.caller.EventCaller;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
+import com.eternalcode.check.notification.Notification;
+import com.eternalcode.check.notification.NotificationAnnoucer;
 import com.eternalcode.check.user.CheckedUser;
 import com.eternalcode.check.user.CheckedUserService;
+import com.eternalcode.check.user.event.CheckedUserAdmitEvent;
 import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.section.Section;
+import dev.rollczi.litecommands.command.route.Route;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import panda.utilities.StringUtils;
@@ -14,21 +17,23 @@ import panda.utilities.text.Formatter;
 
 import java.util.Optional;
 
-@Section(route = "admit", aliases = { "przyznajsie", "ff"} )
+@Route(name = "admit", aliases = { "przyznajsie", "ff"} )
 public class AdmitCommand {
 
+    private final CheckedUserService checkedUserService;
+    private final NotificationAnnoucer announcer;
+    private final EventCaller eventCaller;
     private final MessagesConfig messages;
     private final PluginConfig config;
-    private final CheckedUserService checkedUserService;
     private final Server server;
-    private final NotificationAnnouncer announcer;
 
-    public AdmitCommand(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer) {
+    public AdmitCommand(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnoucer announcer, EventCaller eventCaller) {
         this.messages = messages;
         this.config = config;
         this.checkedUserService = checkedUserService;
         this.server = server;
         this.announcer = announcer;
+        this.eventCaller = eventCaller;
     }
 
     @Execute
@@ -36,7 +41,7 @@ public class AdmitCommand {
         Optional<CheckedUser> userOptional = this.checkedUserService.find(player.getUniqueId());
 
         if (!userOptional.isPresent()) {
-            this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.youArentChecked);
+            this.announcer.annouceMessage(player, this.messages.argument.youArentChecked);
 
             return;
         }
@@ -51,8 +56,12 @@ public class AdmitCommand {
                 .register("{PLAYER}", user.getName())
                 .register("{ADMIN}", user.getChecker());
 
-        for (Player all : this.server.getOnlinePlayers()) {
-            this.messages.check.broadcast.admit.forEach(message -> this.announcer.announceMessage(all.getUniqueId(), formatter.format(message)));
+        for (Notification notification : this.messages.check.broadcast.admit) {
+            this.announcer.annouceMessageAll(notification, formatter);
         }
+
+        Player admin = this.server.getPlayer(user.getChecker());
+
+        this.eventCaller.callEvent(new CheckedUserAdmitEvent(user, admin));
     }
 }

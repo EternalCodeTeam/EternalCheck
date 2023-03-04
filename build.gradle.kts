@@ -30,13 +30,16 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     // LiteCommands
-    implementation("dev.rollczi.litecommands:bukkit:2.7.0")
+    implementation("dev.rollczi.litecommands:bukkit:2.8.4")
 
     // CDN
     implementation("net.dzikoysk:cdn:1.14.1")
 
     // bStats
     implementation("org.bstats:bstats-bukkit:3.0.0")
+
+    // gitcheck
+    implementation("com.eternalcode:gitcheck:1.0.0")
 }
 
 tasks.withType<JavaCompile> {
