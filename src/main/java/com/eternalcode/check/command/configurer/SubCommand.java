@@ -15,7 +15,6 @@ public class SubCommand {
     }
 
     public SubCommand() {
-
     }
 
     public String name() {

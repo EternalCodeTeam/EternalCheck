@@ -24,7 +24,6 @@ public class Command {
     }
 
     public Command() {
-
     }
 
     public String name() {
