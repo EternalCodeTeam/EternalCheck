@@ -4,7 +4,7 @@ import com.eternalcode.check.caller.EventCaller;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.notification.Notification;
-import com.eternalcode.check.notification.NotificationAnnoucer;
+import com.eternalcode.check.notification.NotificationAnnouncer;
 import com.eternalcode.check.user.CheckedUserService;
 import com.eternalcode.check.user.event.CheckedUserLogoutEvent;
 import org.bukkit.Server;
@@ -20,13 +20,13 @@ import java.util.UUID;
 public class CheckedUserLogoutPunishmentController implements Listener {
 
     private final CheckedUserService checkedUserService;
-    private final NotificationAnnoucer announcer;
+    private final NotificationAnnouncer announcer;
     private final EventCaller eventCaller;
     private final MessagesConfig messages;
     private final PluginConfig config;
     private final Server server;
 
-    public CheckedUserLogoutPunishmentController(CheckedUserService checkedUserService, NotificationAnnoucer announcer, MessagesConfig messages, PluginConfig config, EventCaller eventCaller, Server server) {
+    public CheckedUserLogoutPunishmentController(CheckedUserService checkedUserService, NotificationAnnouncer announcer, MessagesConfig messages, PluginConfig config, EventCaller eventCaller, Server server) {
         this.checkedUserService = checkedUserService;
         this.announcer = announcer;
         this.messages = messages;
@@ -46,7 +46,7 @@ public class CheckedUserLogoutPunishmentController implements Listener {
                     .register("{ADMIN}", player.getName());
 
             for (Notification notification : this.messages.check.broadcast.logoutCheck) {
-                this.announcer.annouceMessage(player, notification, formatter);
+                this.announcer.sendAnnounce(player, notification, formatter);
             }
 
             this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.logout, "{PLAYER}", player.getName()));

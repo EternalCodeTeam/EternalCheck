@@ -2,7 +2,7 @@ package com.eternalcode.check.updater;
 
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.notification.Notification;
-import com.eternalcode.check.notification.NotificationAnnoucer;
+import com.eternalcode.check.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,12 +12,12 @@ public class UpdaterNotificationController implements Listener {
 
     private static final Notification NEW_VERSION_AVAILABLE = Notification.chat("<b><gradient:#8a1212:#fc6b03>EternalCheck:</gradient></b> <color:#fce303>New version of EternalCheck is available, please update!");
 
-    private final NotificationAnnoucer annoucer;
+    private final NotificationAnnouncer announcer;
     private final UpdaterService updaterService;
     private final PluginConfig pluginConfig;
 
-    public UpdaterNotificationController(NotificationAnnoucer annoucer, UpdaterService updaterService, PluginConfig pluginConfig) {
-        this.annoucer = annoucer;
+    public UpdaterNotificationController(NotificationAnnouncer announcer, UpdaterService updaterService, PluginConfig pluginConfig) {
+        this.announcer = announcer;
         this.updaterService = updaterService;
         this.pluginConfig = pluginConfig;
     }
@@ -42,7 +42,7 @@ public class UpdaterNotificationController implements Listener {
             }
 
             if (!isUpToDate) {
-                this.annoucer.annouceMessage(player, NEW_VERSION_AVAILABLE);
+                this.announcer.sendAnnounce(player, NEW_VERSION_AVAILABLE);
             }
         });
     }

@@ -19,7 +19,7 @@ import com.eternalcode.check.config.implementation.CheckedUserDataConfig;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.notification.Notification;
-import com.eternalcode.check.notification.NotificationAnnoucer;
+import com.eternalcode.check.notification.NotificationAnnouncer;
 import com.eternalcode.check.updater.UpdaterNotificationController;
 import com.eternalcode.check.updater.UpdaterService;
 import com.eternalcode.check.user.controller.CheckedUserChatController;
@@ -32,6 +32,8 @@ import com.eternalcode.check.user.CheckedUserService;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
+import dev.rollczi.litecommands.command.permission.RequiredPermissions;
+import dev.rollczi.litecommands.schematic.Schematic;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -55,7 +57,7 @@ public final class EternalCheck extends JavaPlugin {
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
 
-    private NotificationAnnoucer notificationAnnouncer;
+    private NotificationAnnouncer notificationAnnouncer;
 
     private CheckedUserService checkedUserService;
 
@@ -86,7 +88,7 @@ public final class EternalCheck extends JavaPlugin {
                 .postProcessor(new LegacyColorProcessor())
                 .build();
 
-        this.notificationAnnouncer = new NotificationAnnoucer(this.config, this.audienceProvider, this.miniMessage, server);
+        this.notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage, this.config, server);
 
         this.checkedUserService = new CheckedUserService();
 
@@ -96,12 +98,12 @@ public final class EternalCheck extends JavaPlugin {
 
         this.liteCommands = LiteBukkitFactory.builder(this.getServer(), "eternalcheck")
                 .argument(Player.class, new PlayerArgument(this.messages, server))
-                .argument(CheckedUser.class, new CheckedUserArgument(this.messages, this.checkedUserService, server))
+                .argument(CheckedUser.class, new CheckedUserArgument(this.checkedUserService, this.messages, server))
 
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>("Only players can use this command!"))
 
-                .permissionHandler(new PermissionHandler(this.messages, this.notificationAnnouncer))
-                .invalidUsageHandler(new InvalidUsageHandler(this.messages, this.notificationAnnouncer))
+                .resultHandler(RequiredPermissions.class, new PermissionHandler(this.notificationAnnouncer, this.messages))
+                .resultHandler(Schematic.class, new InvalidUsageHandler(this.messages, this.notificationAnnouncer))
                 .resultHandler(Notification.class, new NotificationHandler(this.notificationAnnouncer))
 
                 .commandInstance(
@@ -170,7 +172,7 @@ public final class EternalCheck extends JavaPlugin {
         return this.miniMessage;
     }
 
-    public NotificationAnnoucer getNotificationAnnouncer() {
+    public NotificationAnnouncer getNotificationAnnouncer() {
         return this.notificationAnnouncer;
     }
 

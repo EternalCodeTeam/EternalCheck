@@ -4,7 +4,7 @@ import com.eternalcode.check.caller.EventCaller;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.notification.Notification;
-import com.eternalcode.check.notification.NotificationAnnoucer;
+import com.eternalcode.check.notification.NotificationAnnouncer;
 import com.eternalcode.check.shared.position.PositionAdapter;
 import com.eternalcode.check.user.CheckedUser;
 import com.eternalcode.check.user.CheckedUserService;
@@ -19,27 +19,27 @@ import org.bukkit.entity.Player;
 import panda.utilities.StringUtils;
 import panda.utilities.text.Formatter;
 
-@Route(name = "check", aliases = "sprawdz")
+@Route(name = "check")
 @Permission("eternalcheck.check")
 public class CheckBanCommand {
 
     private final CheckedUserService checkedUserService;
-    private final NotificationAnnoucer annoucer;
+    private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
     private final EventCaller eventCaller;
     private final PluginConfig config;
     private final Server server;
 
-    public CheckBanCommand(CheckedUserService checkedUserService, NotificationAnnoucer annoucer, MessagesConfig messages, EventCaller eventCaller, PluginConfig config, Server server) {
+    public CheckBanCommand(CheckedUserService checkedUserService, NotificationAnnouncer announcer, MessagesConfig messages, EventCaller eventCaller, PluginConfig config, Server server) {
         this.checkedUserService = checkedUserService;
-        this.annoucer = annoucer;
+        this.announcer = announcer;
         this.messages = messages;
         this.eventCaller = eventCaller;
         this.config = config;
         this.server = server;
     }
 
-    @Execute(route = "ban", aliases = "zbanuj", required = 1)
+    @Execute(route = "ban", required = 1)
     void execute(Player player, @Arg @Name("player") CheckedUser user) {
         Player playerArgument = this.server.getPlayer(user.getUniqueId());
 
@@ -51,10 +51,10 @@ public class CheckBanCommand {
                 .register("{PLAYER}", user.getName())
                 .register("{ADMIN}", player.getName());
 
-        this.annoucer.annouceMessage(player, this.messages.check.admin.ban, formatter);
+        this.announcer.sendAnnounce(player, this.messages.check.admin.ban, formatter);
 
         for (Notification notification : this.messages.check.broadcast.banCheck) {
-            this.annoucer.annouceMessageAll(notification, formatter);
+            this.announcer.sendAnnounceAll(notification, formatter);
         }
 
         this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.ban, "{PLAYER}", user.getName()));

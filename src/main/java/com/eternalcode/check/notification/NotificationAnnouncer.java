@@ -11,29 +11,29 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
-public class NotificationAnnoucer {
+public class NotificationAnnouncer {
 
     private static final Formatter EMPTY_FORMATTER = new Formatter();
 
-    private final PluginConfig config;
     private final AudienceProvider audienceProvider;
     private final MiniMessage miniMessage;
+    private final PluginConfig config;
     private Title.Times titleTimes;
     private final Server server;
 
-    public NotificationAnnoucer(PluginConfig config, AudienceProvider audienceProvider, MiniMessage miniMessage, Server server) {
+    public NotificationAnnouncer(AudienceProvider audienceProvider, MiniMessage miniMessage, PluginConfig config, Server server) {
         this.audienceProvider = audienceProvider;
-        this.config = config;
         this.miniMessage = miniMessage;
+        this.config = config;
         this.server = server;
     }
 
-    public void annouceMessage(CommandSender sender, Notification notification) {
-        this.annouceMessage(sender, notification, EMPTY_FORMATTER);
+    public void sendAnnounce(CommandSender sender, Notification notification) {
+        this.sendAnnounce(sender, notification, EMPTY_FORMATTER);
     }
 
-    public void annouceMessage(CommandSender sender, Notification notification, Formatter formatter) {
-        Audience audience = this.audience(sender);
+    public void sendAnnounce(CommandSender sender, Notification notification, Formatter formatter) {
+        Audience audience = this.toAudience(sender);
 
         String message = formatter.format(notification.message());
 
@@ -75,11 +75,11 @@ public class NotificationAnnoucer {
 
     }
 
-    public void annouceMessageAll(Notification notification, Formatter formatter) {
-        this.server.getOnlinePlayers().forEach(player -> this.annouceMessage(player, notification, formatter));
+    public void sendAnnounceAll(Notification notification, Formatter formatter) {
+        this.server.getOnlinePlayers().forEach(player -> this.sendAnnounce(player, notification, formatter));
     }
 
-    private Audience audience(CommandSender sender) {
+    private Audience toAudience(CommandSender sender) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 

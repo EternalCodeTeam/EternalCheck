@@ -24,7 +24,7 @@ public class MessagesConfig implements ReloadableConfig {
             "# ",
             "# EternalCheck - A simple plugin for checking suspicious players.",
             "# ",
-            "# Discord: https://dc.eternalcode.pl/",
+            "# Discord: https://discord.gg/NvZ6apa5sJ/",
             "# Website: https://eternalcode.pl/",
             "#",
             "# Notification types:",

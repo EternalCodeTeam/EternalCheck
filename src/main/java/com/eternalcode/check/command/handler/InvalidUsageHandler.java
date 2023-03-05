@@ -1,18 +1,19 @@
 package com.eternalcode.check.command.handler;
 
 import com.eternalcode.check.config.implementation.MessagesConfig;
-import com.eternalcode.check.notification.NotificationAnnoucer;
+import com.eternalcode.check.notification.NotificationAnnouncer;
 import dev.rollczi.litecommands.command.LiteInvocation;
+import dev.rollczi.litecommands.handle.Handler;
 import dev.rollczi.litecommands.schematic.Schematic;
 import org.bukkit.command.CommandSender;
 import panda.utilities.text.Formatter;
 
-public class InvalidUsageHandler implements dev.rollczi.litecommands.handle.InvalidUsageHandler<CommandSender> {
+public class InvalidUsageHandler implements Handler<CommandSender, Schematic> {
 
-    private final NotificationAnnoucer announcer;
+    private final NotificationAnnouncer announcer;
     private final MessagesConfig messagesConfig;
 
-    public InvalidUsageHandler(MessagesConfig messagesConfig, NotificationAnnoucer announcer) {
+    public InvalidUsageHandler(MessagesConfig messagesConfig, NotificationAnnouncer announcer) {
         this.messagesConfig = messagesConfig;
         this.announcer = announcer;
     }
@@ -20,14 +21,17 @@ public class InvalidUsageHandler implements dev.rollczi.litecommands.handle.Inva
     @Override
     public void handle(CommandSender commandSender, LiteInvocation invocation, Schematic scheme) {
         if (scheme.isOnlyFirst()) {
-            this.announcer.annouceMessage(commandSender, this.messagesConfig.argument.correctUsage, new Formatter()
-                    .register("{USAGE}", scheme.first()));
+            Formatter formatter = new Formatter().register("{USAGE}", scheme.first());
+
+            this.announcer.sendAnnounce(commandSender, this.messagesConfig.argument.correctUsage, formatter);
 
             return;
         }
 
         for (String schemematic : scheme.getSchematics()) {
-            this.announcer.annouceMessage(commandSender, this.messagesConfig.argument.correctUsageList, new Formatter().register("{USAGE}", schemematic));
+            Formatter formatter = new Formatter().register("{USAGE}", schemematic);
+
+            this.announcer.sendAnnounce(commandSender, this.messagesConfig.argument.correctUsageList, formatter);
         }
     }
 }

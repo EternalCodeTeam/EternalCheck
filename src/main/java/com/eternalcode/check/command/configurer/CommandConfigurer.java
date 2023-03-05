@@ -13,21 +13,23 @@ public class CommandConfigurer implements CommandEditor {
 
     @Override
     public State edit(State state) {
-        CommandConfiguration.Command command = this.commandConfiguration.commands.get(state.getName());
+        Command command = this.commandConfiguration.commands.get(state.getName());
 
         if (command == null) {
             return state;
         }
 
-        if (command.subCommands.size() >= 1) {
-            for (CommandConfiguration.SubCommand subCommand : command.subCommands) {
-                state = state.editChild(subCommand.name, editor -> editor.name(subCommand.alias));
+        if (command.subCommands().size() >= 1) {
+            for (SubCommand subCommand : command.subCommands()) {
+                state = state.editChild(subCommand.name(), editor -> editor
+                        .name(subCommand.alias())
+                        .permission(subCommand.permissions(), true));
             }
         }
 
-        return state.name(command.name)
-                .aliases(command.aliases, true)
-                .permission(command.permissions, true);
+        return state.name(command.name())
+                .aliases(command.aliases(), true)
+                .permission(command.permissions(), true);
 
     }
 }

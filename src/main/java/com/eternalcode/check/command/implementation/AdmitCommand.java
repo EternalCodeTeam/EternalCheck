@@ -4,7 +4,7 @@ import com.eternalcode.check.caller.EventCaller;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
 import com.eternalcode.check.notification.Notification;
-import com.eternalcode.check.notification.NotificationAnnoucer;
+import com.eternalcode.check.notification.NotificationAnnouncer;
 import com.eternalcode.check.user.CheckedUser;
 import com.eternalcode.check.user.CheckedUserService;
 import com.eternalcode.check.user.event.CheckedUserAdmitEvent;
@@ -17,17 +17,17 @@ import panda.utilities.text.Formatter;
 
 import java.util.Optional;
 
-@Route(name = "admit", aliases = { "przyznajsie", "ff"} )
+@Route(name = "admit")
 public class AdmitCommand {
 
     private final CheckedUserService checkedUserService;
-    private final NotificationAnnoucer announcer;
+    private final NotificationAnnouncer announcer;
     private final EventCaller eventCaller;
     private final MessagesConfig messages;
     private final PluginConfig config;
     private final Server server;
 
-    public AdmitCommand(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnoucer announcer, EventCaller eventCaller) {
+    public AdmitCommand(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer, EventCaller eventCaller) {
         this.messages = messages;
         this.config = config;
         this.checkedUserService = checkedUserService;
@@ -41,7 +41,7 @@ public class AdmitCommand {
         Optional<CheckedUser> userOptional = this.checkedUserService.find(player.getUniqueId());
 
         if (!userOptional.isPresent()) {
-            this.announcer.annouceMessage(player, this.messages.argument.youArentChecked);
+            this.announcer.sendAnnounce(player, this.messages.argument.youArentChecked);
 
             return;
         }
@@ -57,7 +57,7 @@ public class AdmitCommand {
                 .register("{ADMIN}", user.getChecker());
 
         for (Notification notification : this.messages.check.broadcast.admit) {
-            this.announcer.annouceMessageAll(notification, formatter);
+            this.announcer.sendAnnounceAll(notification, formatter);
         }
 
         Player admin = this.server.getPlayer(user.getChecker());
