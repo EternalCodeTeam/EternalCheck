@@ -9,8 +9,6 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
-import java.util.ArrayList;
-
 public final class CheckNotificationTask implements Runnable {
 
     private final CheckedUserService checkedUserService;
@@ -27,7 +25,7 @@ public final class CheckNotificationTask implements Runnable {
 
     @Override
     public void run() {
-        for (CheckedUser user : new ArrayList<>(this.checkedUserService.checkedUsers())) {
+        for (CheckedUser user : this.checkedUserService.checkedUsers()) {
             Player player = this.server.getPlayer(user.getUniqueId());
 
             if (player == null) {
