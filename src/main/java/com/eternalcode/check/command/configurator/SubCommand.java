@@ -1,4 +1,4 @@
-package com.eternalcode.check.command.configurer;
+package com.eternalcode.check.command.configurator;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.eternalcode.check.command;
 
-import com.eternalcode.check.command.configurer.Command;
-import com.eternalcode.check.command.configurer.SubCommand;
+import com.eternalcode.check.command.configurator.Command;
+import com.eternalcode.check.command.configurator.SubCommand;
 import com.eternalcode.check.config.ReloadableConfig;
 import com.google.common.collect.ImmutableMap;
 import net.dzikoysk.cdn.entity.Description;

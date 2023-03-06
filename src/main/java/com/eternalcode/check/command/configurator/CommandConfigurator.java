@@ -1,13 +1,13 @@
-package com.eternalcode.check.command.configurer;
+package com.eternalcode.check.command.configurator;
 
 import com.eternalcode.check.command.CommandConfiguration;
 import dev.rollczi.litecommands.factory.CommandEditor;
 
-public class CommandConfigurer implements CommandEditor {
+public class CommandConfigurator implements CommandEditor {
 
     private final CommandConfiguration commandConfiguration;
 
-    public CommandConfigurer(CommandConfiguration commandConfiguration) {
+    public CommandConfigurator(CommandConfiguration commandConfiguration) {
         this.commandConfiguration = commandConfiguration;
     }
 

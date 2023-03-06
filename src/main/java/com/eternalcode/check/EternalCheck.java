@@ -4,7 +4,7 @@ import com.eternalcode.check.caller.EventCaller;
 import com.eternalcode.check.command.CommandConfiguration;
 import com.eternalcode.check.command.argument.CheckedUserArgument;
 import com.eternalcode.check.command.argument.PlayerArgument;
-import com.eternalcode.check.command.configurer.CommandConfigurer;
+import com.eternalcode.check.command.configurator.CommandConfigurator;
 import com.eternalcode.check.command.handler.NotificationHandler;
 import com.eternalcode.check.command.implementation.AdmitCommand;
 import com.eternalcode.check.command.implementation.CheckBanCommand;
@@ -115,7 +115,7 @@ public final class EternalCheck extends JavaPlugin {
                         new CheckStartCommand(this.checkedUserDataConfig, this.checkedUserService, this.notificationAnnouncer, this.configManager, this.messages, this.eventCaller, this.config)
                 )
 
-                .commandGlobalEditor(new CommandConfigurer(this.commandConfig))
+                .commandGlobalEditor(new CommandConfigurator(this.commandConfig))
 
                 .register();
 
