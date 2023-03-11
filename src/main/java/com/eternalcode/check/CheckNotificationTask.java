@@ -1,53 +1,43 @@
 package com.eternalcode.check;
 
 import com.eternalcode.check.config.implementation.MessagesConfig;
-import com.eternalcode.check.config.implementation.PluginConfig;
+import com.eternalcode.check.notification.Notification;
+import com.eternalcode.check.notification.NotificationAnnouncer;
 import com.eternalcode.check.user.CheckedUser;
 import com.eternalcode.check.user.CheckedUserService;
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
-
-import java.time.Duration;
-import java.util.UUID;
 
 public final class CheckNotificationTask implements Runnable {
 
-    private final MessagesConfig messages;
-    private final PluginConfig config;
     private final CheckedUserService checkedUserService;
     private final NotificationAnnouncer announcer;
+    private final MessagesConfig messages;
+    private final Server server;
 
-    private final Duration stay, fadeOut, fadeIn;
-
-    public CheckNotificationTask(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, NotificationAnnouncer announcer) {
-        this.messages = messages;
-        this.config = config;
+    public CheckNotificationTask(CheckedUserService checkedUserService, NotificationAnnouncer announcer, MessagesConfig messages, Server server) {
         this.checkedUserService = checkedUserService;
         this.announcer = announcer;
-
-        this.stay = this.config.settings.title.stay;
-        this.fadeOut = this.config.settings.title.fadeOut;
-        this.fadeIn = this.config.settings.title.fadeIn;
+        this.messages = messages;
+        this.server = server;
     }
 
     @Override
     public void run() {
-        for (CheckedUser user : this.checkedUserService.getUsers()) {
-            UUID userUniqueId = user.getUniqueId();
+        for (CheckedUser user : this.checkedUserService.checkedUsers()) {
+            Player player = this.server.getPlayer(user.getUniqueId());
+
+            if (player == null) {
+                continue;
+            }
 
             Formatter formatter = new Formatter()
                     .register("{PLAYER}", user.getName())
                     .register("{ADMIN}", user.getChecker());
 
-            if (this.config.settings.title.taskTitleMessageEnabled) {
-                this.announcer.announceTitle(userUniqueId, this.messages.check.task.title, this.messages.check.task.subTitle, this.stay, this.fadeOut, this.fadeIn);
-            }
-
-            if (this.config.settings.taskActionBarEnabled) {
-                this.announcer.announceActionBar(userUniqueId, this.messages.check.task.actionBar);
-            }
-
-            if (this.config.settings.taskMessageEnabled) {
-                this.messages.check.task.message.forEach(message -> this.announcer.announceMessage(userUniqueId, formatter.format(message)));
+            for (Notification notification : this.messages.check.taskMessages) {
+                this.announcer.sendAnnounce(player, notification, formatter);
             }
         }
     }

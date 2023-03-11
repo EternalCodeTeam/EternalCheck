@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 @ArgumentName("user")
 public class CheckedUserArgument implements OneArgument<CheckedUser> {
 
-    private final MessagesConfig messages;
     private final CheckedUserService checkedUserService;
+    private final MessagesConfig messages;
     private final Server server;
 
-    public CheckedUserArgument(MessagesConfig messages, CheckedUserService checkedUserService, Server server) {
-        this.messages = messages;
+    public CheckedUserArgument(CheckedUserService checkedUserService, MessagesConfig messages, Server server) {
         this.checkedUserService = checkedUserService;
+        this.messages = messages;
         this.server = server;
     }
 
@@ -47,7 +47,7 @@ public class CheckedUserArgument implements OneArgument<CheckedUser> {
 
     @Override
     public List<Suggestion> suggest(LiteInvocation invocation) {
-        return this.checkedUserService.getUsers()
+        return this.checkedUserService.checkedUsers()
                 .stream()
                 .map(CheckedUser::getName)
                 .map(Suggestion::of)

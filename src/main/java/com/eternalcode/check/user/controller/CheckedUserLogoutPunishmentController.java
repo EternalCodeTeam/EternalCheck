@@ -1,9 +1,12 @@
-package com.eternalcode.check.controller;
+package com.eternalcode.check.user.controller;
 
-import com.eternalcode.check.NotificationAnnouncer;
+import com.eternalcode.check.caller.EventCaller;
 import com.eternalcode.check.config.implementation.MessagesConfig;
 import com.eternalcode.check.config.implementation.PluginConfig;
+import com.eternalcode.check.notification.Notification;
+import com.eternalcode.check.notification.NotificationAnnouncer;
 import com.eternalcode.check.user.CheckedUserService;
+import com.eternalcode.check.user.event.CheckedUserLogoutEvent;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,18 +19,20 @@ import java.util.UUID;
 
 public class CheckedUserLogoutPunishmentController implements Listener {
 
+    private final CheckedUserService checkedUserService;
+    private final NotificationAnnouncer announcer;
+    private final EventCaller eventCaller;
     private final MessagesConfig messages;
     private final PluginConfig config;
-    private final CheckedUserService checkedUserService;
     private final Server server;
-    private final NotificationAnnouncer announcer;
 
-    public CheckedUserLogoutPunishmentController(MessagesConfig messages, PluginConfig config, CheckedUserService checkedUserService, Server server, NotificationAnnouncer announcer) {
+    public CheckedUserLogoutPunishmentController(CheckedUserService checkedUserService, NotificationAnnouncer announcer, MessagesConfig messages, PluginConfig config, EventCaller eventCaller, Server server) {
+        this.checkedUserService = checkedUserService;
+        this.announcer = announcer;
         this.messages = messages;
         this.config = config;
-        this.checkedUserService = checkedUserService;
+        this.eventCaller = eventCaller;
         this.server = server;
-        this.announcer = announcer;
     }
 
     @EventHandler
@@ -36,18 +41,21 @@ public class CheckedUserLogoutPunishmentController implements Listener {
         UUID uniqueId = player.getUniqueId();
 
         this.checkedUserService.find(uniqueId).ifPresent(user -> {
-
             Formatter formatter = new Formatter()
                     .register("{PLAYER}", user.getName())
                     .register("{ADMIN}", player.getName());
 
-            for (Player all : this.server.getOnlinePlayers()) {
-                this.messages.check.broadcast.logoutCheck.forEach(message -> this.announcer.announceMessage(all.getUniqueId(), formatter.format(message)));
+            for (Notification notification : this.messages.check.broadcast.logoutCheck) {
+                this.announcer.sendAnnounce(player, notification, formatter);
             }
 
             this.server.dispatchCommand(this.server.getConsoleSender(), StringUtils.replace(this.config.commands.logout, "{PLAYER}", player.getName()));
 
             this.checkedUserService.unmarkChecked(uniqueId);
+
+            Player admin = this.server.getPlayer(user.getChecker());
+
+            this.eventCaller.callEvent(new CheckedUserLogoutEvent(user, admin));
         });
     }
 }
