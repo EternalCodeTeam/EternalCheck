@@ -17,7 +17,7 @@ public class PluginConfig implements ReloadableConfig {
     @Description({ "# ",
             "# EternalCheck - A simple plugin for checking suspicious players",
             "# ",
-            "# Discord: https://discord.gg/NvZ6apa5sJ/",
+            "# Discord: https://discord.gg/TBgbN3fruj",
             "# Website: https://eternalcode.pl/", " " })
 
     @Description("# Settings")
