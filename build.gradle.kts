@@ -3,8 +3,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     id("java-library")
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
-    id("xyz.jpenilla.run-paper") version "2.0.1"
+    id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
+    id("xyz.jpenilla.run-paper") version "2.2.3"
 }
 
 group = "com.eternalcode"
@@ -26,11 +26,11 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
 
     // Kyori Adventure
-    implementation("net.kyori:adventure-platform-bukkit:4.3.0")
-    implementation("net.kyori:adventure-text-minimessage:4.13.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.2")
+    implementation("net.kyori:adventure-text-minimessage:4.16.0")
 
     // LiteCommands
-    implementation("dev.rollczi.litecommands:bukkit:2.8.6")
+    implementation("dev.rollczi.litecommands:bukkit:2.8.9")
 
     // CDN
     implementation("net.dzikoysk:cdn:1.14.4")
